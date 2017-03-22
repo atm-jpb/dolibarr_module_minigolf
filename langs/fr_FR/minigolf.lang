@@ -26,10 +26,13 @@ Accepted=Accepté
 # LIST
 minigolfList=Liste minigolf
 Nominigolf=(vide)
+NoMyModule = Pas d'info à afficher
+ListeDesTrou = Liste des trous
 
 # CARD
 Newminigolf=Création minigolf
 minigolfCard=Fiche minigolf
+cardTrouTitle = Affichage d'un trou
 
 # CARD TPL
 Save=Enregistrer

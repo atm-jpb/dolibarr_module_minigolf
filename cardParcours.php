@@ -4,7 +4,7 @@ require 'config.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/functions.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 dol_include_once('/minigolf/class/minigolf.class.php');
-dol_include_once('/mymodule/lib/mymodule.lib.php');
+dol_include_once('/mymodule/lib/minigolf.lib.php');
 
 if(empty($user->rights->minigolf->read)) accessforbidden();
 
@@ -12,10 +12,9 @@ $langs->load('minigolf@minigolf');
 
 $action = GETPOST('action');
 $id = GETPOST('id', 'int');
-$ref = GETPOST('ref');
 
 $mode = 'view';
-if (empty($user->rights->mymodule->write)) $mode = 'view'; // Force 'view' mode if can't edit object
+if (empty($user->rights->minigolf->write)) $mode = 'view'; // Force 'view' mode if can't edit object
 else if ($action == 'create' || $action == 'edit') $mode = 'edit';
 
 $PDOdb = new TPDOdb;
@@ -59,32 +58,32 @@ if (empty($reshook))
 				break;
 			}
 			
-			$object->save($PDOdb, empty($object->ref));
+			$object->save($PDOdb, empty($object->ref)); // ref ?
 			
-			header('Location: '.dol_buildpath('/minigolf/card.php', 1).'?id='.$object->getId());
+			header('Location: '.dol_buildpath('/minigolf/cardTrou.php', 1).'?id='.$object->getId());
 			exit;
 			
 			break;
 		case 'confirm_clone':
 			$object->cloneObject($PDOdb);
 			
-			header('Location: '.dol_buildpath('/minigolf/card.php', 1).'?id='.$object->getId());
+			header('Location: '.dol_buildpath('/minigolf/cardTrou.php', 1).'?id='.$object->getId());
 			exit;
 			break;
 		case 'modif':
-			if (!empty($user->rights->mymodule->write)) $object->setDraft($PDOdb);
+			if (!empty($user->rights->minigolf->write)) $object->setDraft($PDOdb);
 				
 			break;
 		case 'confirm_validate':
-			if (!empty($user->rights->mymodule->write)) $object->setValid($PDOdb);
+			if (!empty($user->rights->minigolf->write)) $object->setValid($PDOdb);
 			
-			header('Location: '.dol_buildpath('/minigolf/card.php', 1).'?id='.$object->getId());
+			header('Location: '.dol_buildpath('/minigolf/cardTrou.php', 1).'?id='.$object->getId());
 			exit;
 			break;
 		case 'confirm_delete':
-			if (!empty($user->rights->mymodule->write)) $object->delete($PDOdb);
+			if (!empty($user->rights->minigolf->write)) $object->delete($PDOdb);
 			
-			header('Location: '.dol_buildpath('/minigolf/list.php', 1));
+			header('Location: '.dol_buildpath('/minigolf/listTrou.php', 1));
 			exit;
 			break;
 		// link from llx_element_element
@@ -106,14 +105,14 @@ llxHeader('',$title);
 
 if ($action == 'create' && $mode == 'edit')
 {
-	load_fiche_titre($langs->trans("minigolf card"));
+	load_fiche_titre($langs->trans("minigolf cardTrou"));
 	dol_fiche_head();
 }
 else
 {
 	$head = minigolfAdminPrepareHead();
 	$picto = 'generic';
-	dol_fiche_head($head, 'card', $langs->trans("minigolf"), 0, $picto);
+	dol_fiche_head($head, 'card', $langs->trans("cardTrouTitle"), 0, $picto);
 }
 
 $formcore = new TFormCore;
@@ -124,38 +123,17 @@ $form = new Form($db);
 $formconfirm = getFormConfirm($PDOdb, $form, $object, $action);
 if (!empty($formconfirm)) echo $formconfirm;
 
-$TBS=new TTemplateTBS();
-$TBS->TBS->protect=false;
-$TBS->TBS->noerr=true;
 
 if ($mode == 'edit') echo $formcore->begin_form($_SERVER['PHP_SELF'], 'form_minigolf_card');
 
-$linkback = '<a href="'.dol_buildpath('custom/minigolf/list.php', 1).'">' . $langs->trans("BackToList") . '</a>';
-print $TBS->render('tpl/card.tpl.php'
-	,array() // Block
-	,array(
-		'object'=>$object
-		,'view' => array(
-			'mode' => $mode
-			,'action' => 'save'
-			,'urlcard' => dol_buildpath('custom/minigolf/card.php', 1)
-			,'urllist' => dol_buildpath('custom/minigolf/list.php', 1)
-			,'showRef' => ($action == 'create') ? $langs->trans('Draft') : $form->showrefnav($object->generic, 'ref', $linkback, 1, 'ref', 'ref', '')
-			,'showLabel' => $formcore->texte('', 'label', $object->label, 80, 255)
-//			,'showNote' => $formcore->zonetexte('', 'note', $object->note, 80, 8)
-			,'showStatus' => $object->getLibStatut(1)
-		)
-		,'langs' => $langs
-		,'user' => $user
-		,'conf' => $conf
-		/*,'TMyModule' => array(
-			'STATUS_DRAFT' => TMyModule::STATUS_DRAFT
-			,'STATUS_VALIDATED' => TMyModule::STATUS_VALIDATED
-			,'STATUS_REFUSED' => TMyModule::STATUS_REFUSED
-			,'STATUS_ACCEPTED' => TMyModule::STATUS_ACCEPTED
-		)*/
-	)
-);
+$linkback = '<a href="'.dol_buildpath('custom/minigolf/listTrou.php', 1).'">' . $langs->trans("BackToList") . '</a>';
+
+
+
+
+// /dol_buildpath('custom/minigolf/card.php', 1)
+
+
 
 if ($mode == 'edit') echo $formcore->end_form();
 

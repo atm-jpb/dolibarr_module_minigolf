@@ -2,7 +2,7 @@
 
 require 'config.php';
 dol_include_once('/minigolf/class/minigolf.class.php');
-dol_include_once('/mymodule/lib/mymodule.lib.php');
+dol_include_once('/mymodule/lib/minigolf.lib.php');
 
 if(empty($user->rights->minigolf->read)) accessforbidden();
 
@@ -11,7 +11,7 @@ $langs->load('minigolf@minigolf');
 
 $PDOdb = new TPDOdb;
 
-$trou = new TTrou();
+$object = new TParcours();
 
 $hookmanager->initHooks(array('mymodulelist'));
 
@@ -30,6 +30,8 @@ if (empty($reshook))
     // Code go here
 
 
+
+
 }
 
 
@@ -45,14 +47,14 @@ llxHeader('',$langs->trans('MyModuleList'),'','');
 // TODO ajouter les champs de son objet que l'on souhaite afficher
 $sql = 'SELECT t.rowid, t.name, t.difficulty' ; //, t.date_cre, t.date_maj, \'\' AS action';
 
-$sql.= ' FROM '.MAIN_DB_PREFIX.'minigolf t ';
+$sql.= ' FROM '.MAIN_DB_PREFIX.'minigolf_parcours t ';
 
 //$sql.= ' WHERE 1=1';
 //$sql.= ' AND t.entity IN ('.getEntity('MyModule', 1).')';
 //if ($type == 'mine') $sql.= ' AND t.fk_user = '.$user->id;
 
 
-$formcore = new TFormCore($_SERVER['PHP_SELF'], 'form_list_minigolfTrou', 'GET');
+$formcore = new TFormCore($_SERVER['PHP_SELF'], 'form_list_minigolfParcours', 'GET');
 
 $nbLine = !empty($user->conf->MAIN_SIZE_LISTE_LIMIT) ? $user->conf->MAIN_SIZE_LISTE_LIMIT : $conf->global->MAIN_SIZE_LISTE_LIMIT;
 
