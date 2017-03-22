@@ -1,21 +1,21 @@
-Module100000Name = MyModule
-Module100000Desc = MyModule Description
+Module50001Name = minigolf
+Module50001Desc = minigolf Description
 
 ATMAbout = Ce module a été développé par <a href="http://www.atm-consulting.fr" target="_blank">ATM Consulting</a><br>Vous pouvez retrouver la documentation sur notre <a href="http://wiki.atm-consulting.fr/index.php/Accueil" target="_blank">wiki</a><br><br>Pour toute question technique ou retour, contactez-nous sur <a href="mailto:support@atm-consulting.fr">support@atm-consulting.fr</a><br><br>Pour toute question commerciale, contactez-nous sur <a href="mailto:contact@atm-consulting.fr">contact@atm-consulting.fr</a> ou au +33 9 77 19 50 70<br><br>Retrouvez nos autres modules sur <a href="http://www.dolistore.com/search.php?orderby=position&orderway=desc&search_query=atm&submit_search=Rechercher" target="_blank">Dolistore</a>
 
-MyModuleSetup = Configuration du module MyModule
-MyModuleAbout = A propos du module MyModule
+minigolfSetup = Configuration du module minigolf
+minigolfAbout = A propos du module minigolf
 
-MyModule=MyModule
+minigolf=minigolf
 
 # MENU
-TopMenuMyModule=MyModule
+TopMenuminigolf=minigolf
 
 # STATUS
-MyModuleStatusDraft=Brouillon (à valider)
-MyModuleStatusValidated=Validée (à accepter)
-MyModuleStatusRefused=Refusée (fermée)
-MyModuleStatusAccepted=Acceptée (fermée)
+minigolfStatusDraft=Brouillon (à valider)
+minigolfStatusValidated=Validée (à accepter)
+minigolfStatusRefused=Refusée (fermée)
+minigolfStatusAccepted=Acceptée (fermée)
 
 Draft=Brouillon
 Validate=Validé
@@ -23,12 +23,12 @@ Refused=Refusé
 Accepted=Accepté
 
 # LIST
-MyModuleList=Liste MyModule
-NoMyModule=(vide)
+minigolfList=Liste minigolf
+Nominigolf=(vide)
 
 # CARD
-NewMyModule=Création MyModule
-MyModuleCard=Fiche MyModule
+Newminigolf=Création minigolf
+minigolfCard=Fiche minigolf
 
 # CARD TPL
 Save=Enregistrer

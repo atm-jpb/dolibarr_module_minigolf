@@ -17,16 +17,16 @@
  */
 
 /**
- * \file    class/actions_mymodule.class.php
- * \ingroup mymodule
+ * \file    class/actions_minigolf.class.php
+ * \ingroup minigolf
  * \brief   This file is an example hook overload class file
  *          Put some comments here
  */
 
 /**
- * Class ActionsMyModule
+ * Class Actionsminigolf
  */
-class ActionsMyModule
+class Actionsminigolf
 {
 	/**
 	 * @var array Hook results. Propagated to $hookmanager->resArray for later reuse

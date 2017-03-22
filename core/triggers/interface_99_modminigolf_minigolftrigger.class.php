@@ -17,12 +17,12 @@
  */
 
 /**
- * 	\file		core/triggers/interface_99_modMyodule_MyModuletrigger.class.php
- * 	\ingroup	mymodule
+ * 	\file		core/triggers/interface_99_modMyodule_minigolftrigger.class.php
+ * 	\ingroup	minigolf
  * 	\brief		Sample trigger
  * 	\remarks	You can create other triggers by copying this one
  * 				- File name should be either:
- * 					interface_99_modMymodule_Mytrigger.class.php
+ * 					interface_99_modMinigolf_Mytrigger.class.php
  * 					interface_99_all_Mytrigger.class.php
  * 				- The file must stay in core/triggers
  * 				- The class name must be InterfaceMytrigger
@@ -33,7 +33,7 @@
 /**
  * Trigger class
  */
-class InterfaceMyModuletrigger
+class Interfaceminigolftrigger
 {
 
     private $db;
@@ -54,7 +54,7 @@ class InterfaceMyModuletrigger
             . "They are provided for tutorial purpose only.";
         // 'development', 'experimental', 'dolibarr' or version
         $this->version = 'development';
-        $this->picto = 'mymodule@mymodule';
+        $this->picto = 'minigolf@minigolf';
     }
 
     /**

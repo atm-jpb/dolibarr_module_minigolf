@@ -9,18 +9,22 @@ if(!defined('INC_FROM_DOLIBARR')) {
 	require('../config.php');
 
 }
-
-
-/* uncomment
-
-
-dol_include_once('/mymodule/class/mymodule.class.php');
+dol_include_once('/minigolf/class/minigolf.class.php');
 
 $PDOdb=new TPDOdb;
 
-$o=new TMyModule;
+
+$o=new TParcours;
 $o->init_db_by_vars($PDOdb);
 
-$o=new TMyModuleChild;
+
+$o=new TParcoursTrou;
 $o->init_db_by_vars($PDOdb);
-*/
+
+
+$o=new TPartie;
+$o->init_db_by_vars($PDOdb);
+
+
+/*$o=new TMyModuleChild;
+$o->init_db_by_vars($PDOdb);*/
