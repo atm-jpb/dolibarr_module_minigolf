@@ -9,7 +9,8 @@ minigolfAbout = A propos du module minigolf
 minigolf=minigolf
 
 # MENU
-TopMenuminigolf=minigolf
+TopMenuminigolf=Minigolf
+LeftMenuParcoursMain=
 
 # STATUS
 minigolfStatusDraft=Brouillon (à valider)

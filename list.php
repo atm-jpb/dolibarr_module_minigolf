@@ -1,15 +1,17 @@
 <?php
 
 require 'config.php';
-dol_include_once('/mymodule/class/mymodule.class.php');
+dol_include_once('/minigolf/class/minigolf.class.php');
+dol_include_once('/mymodule/lib/mymodule.lib.php');
 
-if(empty($user->rights->mymodule->read)) accessforbidden();
+if(empty($user->rights->minigolf->read)) accessforbidden();
 
 $langs->load('abricot@abricot');
-$langs->load('mymodule@mymodule');
+$langs->load('minigolf@minigolf');
 
 $PDOdb = new TPDOdb;
-$object = new TMyModule;
+
+$trou = new TTrou();
 
 $hookmanager->initHooks(array('mymodulelist'));
 
@@ -23,7 +25,11 @@ if ($reshook < 0) setEventMessages($hookmanager->error, $hookmanager->errors, 'e
 
 if (empty($reshook))
 {
-	// do action from GETPOST ... 
+	// do action from GETPOST ...
+
+    // Code go here
+
+
 }
 
 
@@ -37,41 +43,45 @@ llxHeader('',$langs->trans('MyModuleList'),'','');
 //if (empty($user->rights->mymodule->all->read)) $type = 'mine';
 
 // TODO ajouter les champs de son objet que l'on souhaite afficher
-$sql = 'SELECT t.rowid, t.ref, t.label, t.date_cre, t.date_maj, \'\' AS action';
+$sql = 'SELECT t.rowid, t.name, t.difficulty' ; //, t.date_cre, t.date_maj, \'\' AS action';
 
-$sql.= ' FROM '.MAIN_DB_PREFIX.'mymodule t ';
+$sql.= ' FROM '.MAIN_DB_PREFIX.'minigolf t ';
 
-$sql.= ' WHERE 1=1';
+//$sql.= ' WHERE 1=1';
 //$sql.= ' AND t.entity IN ('.getEntity('MyModule', 1).')';
 //if ($type == 'mine') $sql.= ' AND t.fk_user = '.$user->id;
 
 
-$formcore = new TFormCore($_SERVER['PHP_SELF'], 'form_list_mymodule', 'GET');
+$formcore = new TFormCore($_SERVER['PHP_SELF'], 'form_list_minigolfTrou', 'GET');
 
 $nbLine = !empty($user->conf->MAIN_SIZE_LISTE_LIMIT) ? $user->conf->MAIN_SIZE_LISTE_LIMIT : $conf->global->MAIN_SIZE_LISTE_LIMIT;
 
-$r = new TListviewTBS('mymodule');
+$r = new TListviewTBS('minigolf');
 echo $r->render($PDOdb, $sql, array(
 	'view_type' => 'list' // default = [list], [raw], [chart]
 	,'limit'=>array(
 		'nbLine' => $nbLine
 	)
 	,'subQuery' => array()
-	,'link' => array()
+	,'link' => array(
+          'rowid'       => '<input name="rowid" value="@val@" />'
+        , 'name'        => '<input name="name" value="@val@" />'
+        , 'difficulty'  => '<input name="difficulty" value="@val@" />'
+    )
 	,'type' => array(
 		'date_cre' => 'date' // [datetime], [hour], [money], [number], [integer]
 		,'date_maj' => 'date'
 	)
-	,'search' => array(
+	/*,'search' => array(
 		'date_cre' => array('recherche' => 'calendars', 'allow_is_null' => true)
 		,'date_maj' => array('recherche' => 'calendars', 'allow_is_null' => false)
 		,'ref' => array('recherche' => true, 'table' => 't', 'field' => 'ref')
 		,'label' => array('recherche' => true, 'table' => array('t', 't'), 'field' => array('label', 'description')) // input text de recherche sur plusieurs champs
 		,'status' => array('recherche' => TMymodule::$TStatus, 'to_translate' => true) // select html, la clé = le status de l'objet, 'to_translate' à true si nécessaire
-	)
+	)*/
 	,'translate' => array()
 	,'hide' => array(
-		'rowid'
+		'rowid' , 'date_cre' , 'date_maj'
 	)
 	,'liste' => array(
 		'titre' => $langs->trans('MyModuleList')
@@ -83,8 +93,8 @@ echo $r->render($PDOdb, $sql, array(
 		,'picto_search' => img_picto('','search.png', '', 0)
 	)
 	,'title'=>array(
-		'ref' => $langs->trans('Ref.')
-		,'label' => $langs->trans('Label')
+		'name' => $langs->trans('nom.')
+		,'difficulty' => $langs->trans('Difficulté')
 		,'date_cre' => $langs->trans('DateCre')
 		,'date_maj' => $langs->trans('DateMaj')
 	)

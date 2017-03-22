@@ -9,7 +9,7 @@ class TParcours extends TObjetStd
 
         $this->set_table(MAIN_DB_PREFIX . 'minigolf_parcours');
 
-        $this->add_champs('name', array('type' => 'string'));
+        $this->add_champs('name', array('type' => 'string' , 'index' => true));
 
         $this->add_champs('difficulty', array('type' => 'integer'));
 
@@ -17,7 +17,7 @@ class TParcours extends TObjetStd
 
         $this->start();
 
-        $this->setChild('TParcoursTrou', 'fk_parcours');
+        //$this->setChild('TParcoursTrou', 'fk_parcours');
 
         $this->errors = array();
     }
@@ -45,16 +45,6 @@ class TParcoursTrou extends TObjetStd {
         $this->errors = array();
     }
 
-    function load(&$PDOdb, $id, $annexe=true) {
-
-        parent::load($PDOdb, $id, $annexe);
-
-        if($this->fk_trou>0) {
-            $this->trou=new TTrou;
-            $this->trou->load($PDOdb, $this->fk_trou);
-        }
-
-    }
 
 }
 
@@ -69,7 +59,31 @@ class TPartie extends TObjetStd
         $this->set_table(MAIN_DB_PREFIX.'minigolf_partie');
 
         $this->add_champs('parcoursId', array('type' => 'integer', 'index' => true));
+
         $this->add_champs('userId', array('type' => 'integer', 'index' => false));
+
+        $this->_init_vars();
+
+        $this->start();
+
+        $this->errors = array();
+    }
+
+}
+
+
+
+class TTrou extends TObjetStd
+{
+
+    public function __construct()
+    {
+        global $conf,$langs,$db;
+
+        $this->set_table(MAIN_DB_PREFIX.'minigolf_trou');
+
+        $this->add_champs('name', array('type' => 'string', 'index' => true));
+        $this->add_champs('difficulty', array('type' => 'integer', 'index' => false));
 
 
 
@@ -81,6 +95,7 @@ class TPartie extends TObjetStd
     }
 
 }
+
 
 
 //utils

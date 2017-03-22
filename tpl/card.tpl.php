@@ -41,7 +41,7 @@
 
 [onshow;block=begin;when [view.mode]!='edit']
 <div class="tabsAction">
-	[onshow;block=begin;when [user.rights.mymodule.write;noerr]=1]
+	[onshow;block=begin;when [user.rights.minigolf.write;noerr]=1]
 	
 		[onshow;block=begin;when [object.status]=[TMyModule.STATUS_DRAFT]]
 			

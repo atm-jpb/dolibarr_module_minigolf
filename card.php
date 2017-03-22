@@ -3,12 +3,12 @@
 require 'config.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/functions.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
-dol_include_once('/mymodule/class/mymodule.class.php');
+dol_include_once('/minigolf/class/minigolf.class.php');
 dol_include_once('/mymodule/lib/mymodule.lib.php');
 
-if(empty($user->rights->mymodule->read)) accessforbidden();
+if(empty($user->rights->minigolf->read)) accessforbidden();
 
-$langs->load('mymodule@mymodule');
+$langs->load('minigolf@minigolf');
 
 $action = GETPOST('action');
 $id = GETPOST('id', 'int');
@@ -19,7 +19,7 @@ if (empty($user->rights->mymodule->write)) $mode = 'view'; // Force 'view' mode 
 else if ($action == 'create' || $action == 'edit') $mode = 'edit';
 
 $PDOdb = new TPDOdb;
-$object = new TMyModule;
+$object = new TTrou;
 
 if (!empty($id)) $object->load($PDOdb, $id);
 elseif (!empty($ref)) $object->loadBy($PDOdb, $ref, 'ref');
@@ -61,14 +61,14 @@ if (empty($reshook))
 			
 			$object->save($PDOdb, empty($object->ref));
 			
-			header('Location: '.dol_buildpath('/mymodule/card.php', 1).'?id='.$object->getId());
+			header('Location: '.dol_buildpath('/minigolf/card.php', 1).'?id='.$object->getId());
 			exit;
 			
 			break;
 		case 'confirm_clone':
 			$object->cloneObject($PDOdb);
 			
-			header('Location: '.dol_buildpath('/mymodule/card.php', 1).'?id='.$object->getId());
+			header('Location: '.dol_buildpath('/minigolf/card.php', 1).'?id='.$object->getId());
 			exit;
 			break;
 		case 'modif':
@@ -78,19 +78,19 @@ if (empty($reshook))
 		case 'confirm_validate':
 			if (!empty($user->rights->mymodule->write)) $object->setValid($PDOdb);
 			
-			header('Location: '.dol_buildpath('/mymodule/card.php', 1).'?id='.$object->getId());
+			header('Location: '.dol_buildpath('/minigolf/card.php', 1).'?id='.$object->getId());
 			exit;
 			break;
 		case 'confirm_delete':
 			if (!empty($user->rights->mymodule->write)) $object->delete($PDOdb);
 			
-			header('Location: '.dol_buildpath('/mymodule/list.php', 1));
+			header('Location: '.dol_buildpath('/minigolf/list.php', 1));
 			exit;
 			break;
 		// link from llx_element_element
 		case 'dellink':
 			$object->generic->deleteObjectLinked(null, '', null, '', GETPOST('dellinkid'));
-			header('Location: '.dol_buildpath('/mymodule/card.php', 1).'?id='.$object->getId());
+			header('Location: '.dol_buildpath('/minigolf/card.php', 1).'?id='.$object->getId());
 			exit;
 			break;
 	}
@@ -101,19 +101,19 @@ if (empty($reshook))
  * View
  */
 
-$title=$langs->trans("MyModule");
+$title=$langs->trans("minigolf");
 llxHeader('',$title);
 
 if ($action == 'create' && $mode == 'edit')
 {
-	load_fiche_titre($langs->trans("NewMyModule"));
+	load_fiche_titre($langs->trans("minigolf card"));
 	dol_fiche_head();
 }
 else
 {
-	$head = mymodule_prepare_head($object);
+	$head = minigolfAdminPrepareHead();
 	$picto = 'generic';
-	dol_fiche_head($head, 'card', $langs->trans("MyModule"), 0, $picto);
+	dol_fiche_head($head, 'card', $langs->trans("minigolf"), 0, $picto);
 }
 
 $formcore = new TFormCore;
@@ -128,9 +128,9 @@ $TBS=new TTemplateTBS();
 $TBS->TBS->protect=false;
 $TBS->TBS->noerr=true;
 
-if ($mode == 'edit') echo $formcore->begin_form($_SERVER['PHP_SELF'], 'form_mymodule');
+if ($mode == 'edit') echo $formcore->begin_form($_SERVER['PHP_SELF'], 'form_minigolf_card');
 
-$linkback = '<a href="'.dol_buildpath('/mymodule/list.php', 1).'">' . $langs->trans("BackToList") . '</a>';
+$linkback = '<a href="'.dol_buildpath('custom/minigolf/list.php', 1).'">' . $langs->trans("BackToList") . '</a>';
 print $TBS->render('tpl/card.tpl.php'
 	,array() // Block
 	,array(
@@ -138,8 +138,8 @@ print $TBS->render('tpl/card.tpl.php'
 		,'view' => array(
 			'mode' => $mode
 			,'action' => 'save'
-			,'urlcard' => dol_buildpath('/mymodule/card.php', 1)
-			,'urllist' => dol_buildpath('/mymodule/list.php', 1)
+			,'urlcard' => dol_buildpath('custom/minigolf/card.php', 1)
+			,'urllist' => dol_buildpath('custom/minigolf/list.php', 1)
 			,'showRef' => ($action == 'create') ? $langs->trans('Draft') : $form->showrefnav($object->generic, 'ref', $linkback, 1, 'ref', 'ref', '')
 			,'showLabel' => $formcore->texte('', 'label', $object->label, 80, 255)
 //			,'showNote' => $formcore->zonetexte('', 'note', $object->note, 80, 8)
@@ -148,17 +148,17 @@ print $TBS->render('tpl/card.tpl.php'
 		,'langs' => $langs
 		,'user' => $user
 		,'conf' => $conf
-		,'TMyModule' => array(
+		/*,'TMyModule' => array(
 			'STATUS_DRAFT' => TMyModule::STATUS_DRAFT
 			,'STATUS_VALIDATED' => TMyModule::STATUS_VALIDATED
 			,'STATUS_REFUSED' => TMyModule::STATUS_REFUSED
 			,'STATUS_ACCEPTED' => TMyModule::STATUS_ACCEPTED
-		)
+		)*/
 	)
 );
 
 if ($mode == 'edit') echo $formcore->end_form();
 
-if ($mode == 'view' && $object->getId()) $somethingshown = $form->showLinkedObjectBlock($object->generic);
+//if ($mode == 'view' && $object->getId()) $somethingshown = $form->showLinkedObjectBlock($object->generic);
 
 llxFooter();
