@@ -60,7 +60,7 @@ function minigolfAdminPrepareHead()
  * @param 	Tminigolf	$object		Object company shown
  * @return 	array				Array of tabs
  */
-function minigolf_prepare_head($object)
+function minigolf_prepare_head(TTrou $object)
 {
     global $db, $langs, $conf, $user;
     $h = 0;

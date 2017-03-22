@@ -234,13 +234,16 @@ class modminigolf extends DolibarrModules
 		// $r++;
 		
 
+
+        //PARCOURS
+
 		$this->menu[$r]=array(	
 			'fk_menu'=>'fk_mainmenu=minigolf',			                // Put 0 if this is a top menu
 			'type'=>'top',			                // This is a Top menu entry
-			'titre'=>$langs->trans('TopMenuminigolf'),
+			'titre'=>$langs->trans('Parcours'),
 			'mainmenu'=>'minigolf',
 			'leftmenu'=>'minigolf_left',
-			'url'=>'custom/minigolf/listTrou.php',
+			'url'=>'custom/minigolf/listParcours.php',
 			'langs'=>'minigolf@minigolf',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>100+$r,
 			'enabled'=>'$conf->minigolf->enabled',	// Define condition to show or hide menu entry. Use '$conf->missionorder->enabled' if entry must be visible if module is enabled.
@@ -253,10 +256,10 @@ class modminigolf extends DolibarrModules
 		$this->menu[$r]=array(
 			'fk_menu'=>'fk_mainmenu=minigolf,fk_leftmenu=minigolf_left',		    // Use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left',			                // This is a Left menu entry
-			'titre'=>$langs->trans('LeftMenuminigolfCreate'),
+			'titre'=>$langs->trans('NouveauParcours'),
 			'mainmenu'=>'minigolf',
 			'leftmenu'=>'',
-			'url'=>'/minigolf/card.php?action=create',
+			'url'=>'custom/minigolf/cardParcours.php?action=create',
 			'langs'=>'minigolf@minigolf',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>100+$r,
 			'enabled'=> '$conf->minigolf->enabled',  // Define condition to show or hide menu entry. Use '$conf->missionorder->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
@@ -270,10 +273,10 @@ class modminigolf extends DolibarrModules
 		$this->menu[$r]=array(
 			'fk_menu'=>'fk_mainmenu=minigolf,fk_leftmenu=minigolf_left',		    // Use 'fk_mainmenu=xxx' or 'fk_mainmenu=xxx,fk_leftmenu=yyy' where xxx is mainmenucode and yyy is a leftmenucode
 			'type'=>'left',			                // This is a Left menu entry
-			'titre'=>$langs->trans('LeftMenuminigolfList'),
+			'titre'=>$langs->trans('ListeDesParcours'),
 			'mainmenu'=>'minigolf',
 			'leftmenu'=>'',
-			'url'=>'/minigolf/listTrou.php',
+			'url'=>'custom/minigolf/listParcours.php',
 			'langs'=>'minigolf@minigolf',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>100+$r,
 			'enabled'=> '$conf->minigolf->enabled',  // Define condition to show or hide menu entry. Use '$conf->missionorder->enabled' if entry must be visible if module is enabled. Use '$leftmenu==\'system\'' to show if leftmenu system is selected.
@@ -282,6 +285,9 @@ class modminigolf extends DolibarrModules
 			'user'=>2
 		);				                // 0=Menu for internal users, 1=external users, 2=both
 		$r++;
+
+		// TROU
+
 
 		
 		// Exports

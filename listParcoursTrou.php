@@ -65,11 +65,7 @@ echo $r->render($PDOdb, $sql, array(
 		'nbLine' => $nbLine
 	)
 	,'subQuery' => array()
-	,'link' => array(
-          'rowid'       => '<input name="rowid" value="@val@" />'
-        , 'name'        => '<input name="name" value="@val@" />'
-        , 'difficulty'  => '<input name="difficulty" value="@val@" />'
-    )
+,'link' => array('name' => '<a href="cardParcoursTrou.php?id=@rowid@&action=edit">@val@</a>' )
 	,'type' => array(
 		'date_cre' => 'date' // [datetime], [hour], [money], [number], [integer]
 		,'date_maj' => 'date'

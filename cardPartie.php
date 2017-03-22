@@ -4,7 +4,7 @@ require 'config.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/functions.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 dol_include_once('/minigolf/class/minigolf.class.php');
-dol_include_once('/mymodule/lib/minigolf.lib.php');
+dol_include_once('/minigolf/lib/minigolf.lib.php');
 
 if(empty($user->rights->minigolf->read)) accessforbidden();
 
@@ -60,14 +60,14 @@ if (empty($reshook))
 			
 			$object->save($PDOdb, empty($object->ref)); // ref ?
 			
-			header('Location: '.dol_buildpath('/minigolf/cardTrou.php', 1).'?id='.$object->getId());
+			header('Location: '.dol_buildpath('/minigolf/cardPartie.php', 1).'?id='.$object->getId());
 			exit;
 			
 			break;
 		case 'confirm_clone':
 			$object->cloneObject($PDOdb);
 			
-			header('Location: '.dol_buildpath('/minigolf/cardTrou.php', 1).'?id='.$object->getId());
+			header('Location: '.dol_buildpath('/minigolf/cardPartie.php', 1).'?id='.$object->getId());
 			exit;
 			break;
 		case 'modif':
@@ -77,19 +77,19 @@ if (empty($reshook))
 		case 'confirm_validate':
 			if (!empty($user->rights->minigolf->write)) $object->setValid($PDOdb);
 			
-			header('Location: '.dol_buildpath('/minigolf/cardTrou.php', 1).'?id='.$object->getId());
+			header('Location: '.dol_buildpath('/minigolf/cardPartie.php', 1).'?id='.$object->getId());
 			exit;
 			break;
 		case 'confirm_delete':
 			if (!empty($user->rights->minigolf->write)) $object->delete($PDOdb);
 			
-			header('Location: '.dol_buildpath('/minigolf/listTrou.php', 1));
+			header('Location: '.dol_buildpath('/minigolf/listPartie.php', 1));
 			exit;
 			break;
 		// link from llx_element_element
 		case 'dellink':
 			$object->generic->deleteObjectLinked(null, '', null, '', GETPOST('dellinkid'));
-			header('Location: '.dol_buildpath('/minigolf/card.php', 1).'?id='.$object->getId());
+			header('Location: '.dol_buildpath('/minigolf/cardPartie.php', 1).'?id='.$object->getId());
 			exit;
 			break;
 	}
@@ -105,28 +105,28 @@ llxHeader('',$title);
 
 if ($action == 'create' && $mode == 'edit')
 {
-	load_fiche_titre($langs->trans("minigolf cardTrou"));
+	load_fiche_titre($langs->trans("minigolf cardPartie"));
 	dol_fiche_head();
 }
 else
 {
 	$head = minigolfAdminPrepareHead();
 	$picto = 'generic';
-	dol_fiche_head($head, 'card', $langs->trans("cardTrouTitle"), 0, $picto);
+	dol_fiche_head($head, 'card', $langs->trans("cardPartie"), 0, $picto);
 }
 
-$formcore = new TFormCore;
-$formcore->Set_typeaff($mode);
+$formCore = new TFormCore;
+$formCore->Set_typeaff($mode);
 
-$form = new Form($db);
+$form = new Form($PDOdb);
 
 $formconfirm = getFormConfirm($PDOdb, $form, $object, $action);
 if (!empty($formconfirm)) echo $formconfirm;
 
 
-if ($mode == 'edit') echo $formcore->begin_form($_SERVER['PHP_SELF'], 'form_minigolf_card');
+if ($mode == 'edit') echo $formCore->begin_form($_SERVER['PHP_SELF'], 'form_minigolf_card');
 
-$linkback = '<a href="'.dol_buildpath('custom/minigolf/listTrou.php', 1).'">' . $langs->trans("BackToList") . '</a>';
+$linkback = '<a href="'.dol_buildpath('custom/minigolf/listPartie.php', 1).'">' . $langs->trans("BackToList") . '</a>';
 
 
 
@@ -135,7 +135,7 @@ $linkback = '<a href="'.dol_buildpath('custom/minigolf/listTrou.php', 1).'">' . 
 
 
 
-if ($mode == 'edit') echo $formcore->end_form();
+if ($mode == 'edit') echo $formCore->end_form();
 
 //if ($mode == 'view' && $object->getId()) $somethingshown = $form->showLinkedObjectBlock($object->generic);
 

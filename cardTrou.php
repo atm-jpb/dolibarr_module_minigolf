@@ -4,7 +4,7 @@ require 'config.php';
 require_once DOL_DOCUMENT_ROOT.'/core/lib/functions.lib.php';
 require_once DOL_DOCUMENT_ROOT.'/core/class/html.form.class.php';
 dol_include_once('/minigolf/class/minigolf.class.php');
-dol_include_once('/mymodule/lib/minigolf.lib.php');
+dol_include_once('/minigolf/lib/minigolf.lib.php');
 
 if(empty($user->rights->minigolf->read)) accessforbidden();
 
@@ -110,23 +110,57 @@ if ($action == 'create' && $mode == 'edit')
 }
 else
 {
-	$head = minigolfAdminPrepareHead();
+	$head = minigolfAdminPrepareHead($trou);
 	$picto = 'generic';
 	dol_fiche_head($head, 'card', $langs->trans("cardTrouTitle"), 0, $picto);
 }
 
-$formcore = new TFormCore;
-$formcore->Set_typeaff($mode);
+$formCore = new TFormCore;
+$formCore->Set_typeaff($mode);
 
-$form = new Form($db);
+$form = new Form($PDOdb);
 
 $formconfirm = getFormConfirm($PDOdb, $form, $object, $action);
 if (!empty($formconfirm)) echo $formconfirm;
 
 
-if ($mode == 'edit') echo $formcore->begin_form($_SERVER['PHP_SELF'], 'form_minigolf_card');
+if ($mode == 'edit') echo $formCore->begin_form($_SERVER['PHP_SELF'], 'form_minigolf_card');
 
 $linkback = '<a href="'.dol_buildpath('custom/minigolf/listTrou.php', 1).'">' . $langs->trans("BackToList") . '</a>';
+
+/*Formulaire perso*/
+
+$shadowTextName     = $langs->trans('Choissiez un nom');
+$shadowTextDiff     = $langs->trans('Choissiez une difficultée');
+$shadowTextPosition = $langs->trans('Choissiez une position');
+
+echo "<div name='newTrou' style='padding:20px;'>";
+
+echo "<table  >";
+
+//function texte($pLib,$pName,$pVal,$pTaille,$pTailleMax=0,$plus='',$class="text", $default='')
+
+echo "<tr><td style='width:150px;' >". $langs->trans('ajouterTrou') . "</td><td style='width:150px;' >";
+echo $formCore->texte('', 'name', $shadowTextName, 22, 255, '');
+
+echo "<tr><td >". $langs->trans('Difficulty') . "</td><td>";
+echo $formCore->texte('', 'difficulty', $shadowTextDiff, 22, 255, '');
+
+echo "<tr><td>";
+
+echo $formCore->btsubmit( $langs->trans('Save'), 'bt_save' );
+
+echo "</td><td style='padding-top:20px;'>";
+
+echo '<a class="button"  href="' .  dol_buildpath('/minigolf/listParcours.php?',1) .'">' . $langs->trans("backToParcours") . '</a>';
+
+echo "</td>";
+
+echo "</table>";
+
+echo "</div>";
+
+//echo "<script type='text/javascript'> $('input').on('click focusin', function() { this.value = ''; }); </script>";
 
 
 
@@ -135,7 +169,7 @@ $linkback = '<a href="'.dol_buildpath('custom/minigolf/listTrou.php', 1).'">' . 
 
 
 
-if ($mode == 'edit') echo $formcore->end_form();
+if ($mode == 'edit') echo $formCore->end_form();
 
 //if ($mode == 'view' && $object->getId()) $somethingshown = $form->showLinkedObjectBlock($object->generic);
 

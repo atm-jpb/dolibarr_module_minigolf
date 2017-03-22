@@ -9,8 +9,9 @@ minigolfAbout = A propos du module minigolf
 minigolf=minigolf
 
 # MENU
-TopMenuminigolf=Minigolf
-LeftMenuParcoursMain=
+Parcours = Parcours
+ListeDesParcours=Liste des parcours
+NouveauParcours = Nouveau Parcours
 
 # STATUS
 minigolfStatusDraft=Brouillon (à valider)
@@ -33,13 +34,6 @@ ListeDesTrou = Liste des trous
 Newminigolf=Création minigolf
 minigolfCard=Fiche minigolf
 cardTrouTitle = Affichage d'un trou
+ajouterTrou = Nom du trou
+Difficulty = Difficulté
 
-# CARD TPL
-Save=Enregistrer
-CreateDraft=Créer brouillon
-Cancel=Annuler
-Validate=Valider
-Modify=Modifier
-Reopen=Rouvrir
-ToClone=Cloner
-Delete=Supprimer

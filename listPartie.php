@@ -52,7 +52,7 @@ $sql.= ' FROM '.MAIN_DB_PREFIX.'minigolf_partie t ';
 //if ($type == 'mine') $sql.= ' AND t.fk_user = '.$user->id;
 
 
-$formcore = new TFormCore($_SERVER['PHP_SELF'], 'form_list_minigolfTrou', 'GET');
+$formCore = new TFormCore($_SERVER['PHP_SELF'], 'form_list_minigolfTrou', 'GET');
 
 $nbLine = !empty($user->conf->MAIN_SIZE_LISTE_LIMIT) ? $user->conf->MAIN_SIZE_LISTE_LIMIT : $conf->global->MAIN_SIZE_LISTE_LIMIT;
 
@@ -63,11 +63,7 @@ echo $r->render($PDOdb, $sql, array(
 		'nbLine' => $nbLine
 	)
 	,'subQuery' => array()
-	,'link' => array(
-          'rowid'       => '<input name="rowid" value="@val@" />'
-        , 'name'        => '<input name="userId" value="@val@" />'
-        , 'difficulty'  => '<input name="parcoursId" value="@val@" />'
-    )
+    ,'link' => array('name' => '<a href="cardPartie.php?id=@rowid@&action=edit">@val@</a>' )
 	,'type' => array(
 		'date_cre' => 'date' // [datetime], [hour], [money], [number], [integer]
 		,'date_maj' => 'date'
@@ -107,7 +103,7 @@ $parameters=array('sql'=>$sql);
 $reshook=$hookmanager->executeHooks('printFieldListFooter', $parameters, $object);    // Note that $action and $object may have been modified by hook
 print $hookmanager->resPrint;
 
-$formcore->end_form();
+$formCore->end_form();
 
 llxFooter('');
 

@@ -63,7 +63,7 @@ echo $r->render($PDOdb, $sql, array(
 		'nbLine' => $nbLine
 	)
 	,'subQuery' => array()
-	,'link' => array('name' => '<a href="cardTrou.php?id=@rowid@&action=view">@val@</a>' )
+	,'link' => array('name' => '<a href="cardTrou.php?id=@rowid@&action=edit">@val@</a>' )
 
 
 	,'type' => array(
