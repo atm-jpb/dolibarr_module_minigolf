@@ -13,17 +13,15 @@ $PDOdb = new TPDOdb;
 
 $object = new TParcoursTrou();
 
+$parcoursId = GETPOST('parcoursId');
 $action = GETPOST('action');
 
-if (empty($action) ){
-    $action = $mode = 'view';
-
-}
+if (empty($action) ) $action = $mode = 'view';
 
 
 $hookmanager->initHooks(array('mymodulelist'));
 
-$parcoursId = GETPOST('parcoursId');
+
 
 
 
@@ -50,6 +48,8 @@ if (empty($reshook))
 
             $object->set_values($_POST); // Set standard attributes
 
+            var_dump($object);exit;
+
             $object->save($PDOdb, empty($object->ref)); // ref ?
 
             header('Location: '.dol_buildpath('/minigolf/listParcoursTrou.php', 1)."?action=edit&parcoursId=$parcoursId"  ); //.'?id= .$object->getId());
@@ -57,6 +57,20 @@ if (empty($reshook))
 
             break;
 
+        case 'delete' :
+
+            $rowid = GETPOST('rowid');
+
+            $object->load($PDOdb, $rowid);
+
+            $object->to_delete = true;
+
+            $object->save($PDOdb);
+            
+            header('Location: '.dol_buildpath('/minigolf/listParcoursTrou.php', 1)."?action=edit&parcoursId=$object->fk_parcours"  ); //.'?id= .$object->getId());
+            exit;
+
+            break;
 
     }
 
@@ -77,7 +91,7 @@ llxHeader('',$langs->trans('Trou du parcours') . _getParcoursNameFromId($parcour
 //if (empty($user->rights->mymodule->all->read)) $type = 'mine';
 
 // TODO ajouter les champs de son objet que l'on souhaite afficher
-$sql = 'SELECT fk_trou, ordre' ; //, t.date_cre, t.date_maj, \'\' AS action';
+$sql = 'SELECT fk_trou, ordre, rowid as dellink' ; //, t.date_cre, t.date_maj, \'\' AS action';
 
 $sql.= ' FROM '.MAIN_DB_PREFIX.'minigolf_parcours_trou ';
 
@@ -108,6 +122,7 @@ echo $r->render($PDOdb, $sql, array(
 	,'subQuery' => array()
 ,'link' => array('name' => '<a href="cardParcoursTrou.php?id=@rowid@&action=edit">@val@</a>'
     , 'ordre' => '<input name="ordre" type="text" value="@val@"/>'
+    , 'dellink' => '<a href="listParcoursTrou.php?rowid=@dellink@&action=delete">X</a>'
     )
 	,'type' => array(
 		'date_cre' => 'date' // [datetime], [hour], [money], [number], [integer]

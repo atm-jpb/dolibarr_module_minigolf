@@ -30,11 +30,6 @@ if (empty($reshook))
 
     // Code go here
 
-
-
-
-
-
 }
 
 
@@ -42,7 +37,7 @@ if (empty($reshook))
  * View
  */
 
-llxHeader('',$langs->trans('MyModuleList'),'','');
+llxHeader('',$langs->trans('ListeDesParcours'),'','');
 
 //$type = GETPOST('type');
 //if (empty($user->rights->mymodule->all->read)) $type = 'mine';
@@ -87,7 +82,7 @@ echo $r->render($PDOdb, $sql, array(
 		'rowid' , 'date_cre' , 'date_maj'
 	)
 	,'liste' => array(
-		'titre' => $langs->trans('MyModuleList')
+		'titre' => $langs->trans('ListeDesParcours')
 		,'image' => img_picto('','title_generic.png', '', 0)
 		,'picto_precedent' => '<'
 		,'picto_suivant' => '>'
