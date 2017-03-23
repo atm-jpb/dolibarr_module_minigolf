@@ -39,8 +39,12 @@ if (empty($reshook))
 	$error = 0;
 	switch ($action) {
 		case 'save':
-			$object->set_values($_REQUEST); // Set standard attributes
-			
+
+            if( $id > 0 ) { $object->load($PDOdb, $id);}
+
+            $object->set_values($_POST); // Set standard attributes
+
+
 //			$object->date_other = dol_mktime(GETPOST('starthour'), GETPOST('startmin'), 0, GETPOST('startmonth'), GETPOST('startday'), GETPOST('startyear'));
 
 			// Check parameters
@@ -130,9 +134,24 @@ $linkback = '<a href="'.dol_buildpath('custom/minigolf/listTrou.php', 1).'">' . 
 
 /*Formulaire perso*/
 
-$shadowTextName     = $langs->trans('Choissiez un nom');
-$shadowTextDiff     = $langs->trans('Choissiez une difficultée');
-$shadowTextPosition = $langs->trans('Choissiez une position');
+echo "<input type=hidden name='id' value='".$id."' />";
+echo"<input type=hidden name='action' value='save' />";
+
+if(empty($object->name)){
+
+    $name     = $langs->trans('Choissiez un nom');
+    $difficulty = $langs->trans('Choissiez une difficultée');
+
+}
+
+else {
+
+    $name     = $object->name;
+    $difficulty = $object->difficulty;
+
+}
+
+
 
 echo "<div name='newTrou' style='padding:20px;'>";
 
@@ -141,10 +160,10 @@ echo "<table  >";
 //function texte($pLib,$pName,$pVal,$pTaille,$pTailleMax=0,$plus='',$class="text", $default='')
 
 echo "<tr><td style='width:150px;' >". $langs->trans('ajouterTrou') . "</td><td style='width:150px;' >";
-echo $formCore->texte('', 'name', $shadowTextName, 22, 255, '');
+echo $formCore->texte('', 'name', $name, 22, 255, '');
 
 echo "<tr><td >". $langs->trans('Difficulty') . "</td><td>";
-echo $formCore->texte('', 'difficulty', $shadowTextDiff, 22, 255, '');
+echo $formCore->texte('', 'difficulty', $difficulty , 22, 255, '');
 
 echo "<tr><td>";
 
@@ -152,7 +171,7 @@ echo $formCore->btsubmit( $langs->trans('Save'), 'bt_save' );
 
 echo "</td><td style='padding-top:20px;'>";
 
-echo '<a class="button"  href="' .  dol_buildpath('/minigolf/listParcours.php?',1) .'">' . $langs->trans("backToParcours") . '</a>';
+echo '<a class="button"  href="' .  dol_buildpath('/minigolf/listTrou.php?',1) .'">' . $langs->trans("backToParcours") . '</a>';
 
 echo "</td>";
 

@@ -18,7 +18,7 @@ if (empty($user->rights->minigolf->write)) $mode = 'view'; // Force 'view' mode 
 else if ($action == 'create' || $action == 'edit') $mode = 'edit';
 
 $PDOdb = new TPDOdb;
-$object = new TTrou;
+$object = new TParcours;
 
 if (!empty($id)) $object->load($PDOdb, $id);
 elseif (!empty($ref)) $object->loadBy($PDOdb, $ref, 'ref');
@@ -39,8 +39,19 @@ if (empty($reshook))
 	$error = 0;
 	switch ($action) {
 		case 'save':
-			$object->set_values($_REQUEST); // Set standard attributes
-			
+
+
+//            var_dump($_POST);
+
+            if( $id > 0 ) { $object->load($PDOdb, $id);}
+
+            $object->set_values($_POST); // Set standard attributes
+
+            //var_dump($object);exit;
+
+		    //$object->set_values($_POST);
+
+
 //			$object->date_other = dol_mktime(GETPOST('starthour'), GETPOST('startmin'), 0, GETPOST('startmonth'), GETPOST('startday'), GETPOST('startyear'));
 
 			// Check parameters
@@ -55,9 +66,10 @@ if (empty($reshook))
 			if ($error > 0)
 			{
 				$mode = 'edit';
+
 				break;
 			}
-			
+
 			$object->save($PDOdb, empty($object->ref)); // ref ?
 			
 			header('Location: '.dol_buildpath('/minigolf/cardParcours.php', 1).'?id='.$object->getId());
@@ -126,14 +138,32 @@ if (!empty($formconfirm)) echo $formconfirm;
 
 if ($mode == 'edit') echo $formCore->begin_form($_SERVER['PHP_SELF'], 'form_minigolf_card');
 
-$linkback = '<a href="'.dol_buildpath('custom/minigolf/listTrou.php', 1).'">' . $langs->trans("BackToList") . '</a>';
+$linkback = '<a href="'.dol_buildpath('custom/minigolf/listParcours.php', 1).'">' . $langs->trans("BackToList") . '</a>';
 
 
 
 /*Formulaire perso*/
 
-$shadowTextName     = $langs->trans('Choissiez un nom');
-$shadowTextDiff     = $langs->trans('Choissiez une difficultée');
+
+
+if(empty($object->name)){
+
+    $rowid = null;
+    $name     = $langs->trans('Choissiez un nom');
+    $difficulty = $langs->trans('Choissiez une difficultée');
+
+}
+
+else {
+
+    $rowid = $object->rowid;
+    $name     = $object->name;
+    $difficulty = $object->difficulty;
+
+}
+
+echo "<input type=hidden name='id' value='".$id."' />";
+echo "<input type=hidden name='action' value='save' />";
 
 
 echo "<div name='newParcoursTrou' style='padding:20px;'>";
@@ -143,14 +173,14 @@ echo "<table  >";
 //function texte($pLib,$pName,$pVal,$pTaille,$pTailleMax=0,$plus='',$class="text", $default='')
 
 echo "<tr><td style='width:150px;' >". $langs->trans('Nom du parcours') . "</td><td style='width:150px;' >";
-echo $formCore->texte('', 'name', $shadowTextName, 22, 255, '');
+echo $formCore->texte('', 'name', $name, 22, 255, '');
 
 echo "<tr><td >". $langs->trans('difficulty') . "</td><td>";
-echo $formCore->texte('', 'difficulty', $shadowTextDiff, 22, 255, '');
+echo $formCore->texte('', 'difficulty', $difficulty, 22, 255, '');
 
 echo "<tr><td>";
 
-echo $formCore->btsubmit( $langs->trans('Save'), 'bt_save' );
+if ($mode == 'edit') echo $formCore->btsubmit( $langs->trans('Save'), 'bt_save' );
 
 echo "</td><td style='padding-top:20px;'>";
 

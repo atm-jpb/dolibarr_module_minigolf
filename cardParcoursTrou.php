@@ -131,11 +131,30 @@ $linkback = '<a href="'.dol_buildpath('custom/minigolf/listParcoursTrou.php', 1)
 
 /*Formulaire perso*/
 
+echo"<input type=hidden name='action' value='save' />";
+
+if(empty($object->name)){
+
+    $name     = $langs->trans('Choissiez un nom');
+    $difficulty = $langs->trans('Choissiez une difficultée');
+
+}
+
+else {
+
+    $name     = $object->name;
+    $difficulty = $object->difficulty;
+
+}
+
+
 $shadowTextName     = $langs->trans('Choissiez un nom');
 $shadowTextDiff     = $langs->trans('Choissiez une difficultée');
 
 
 echo "<div name='newParcoursTrou' style='padding:20px;'>";
+
+
 
 echo "<table  >";
 

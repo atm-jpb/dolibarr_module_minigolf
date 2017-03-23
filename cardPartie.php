@@ -18,7 +18,7 @@ if (empty($user->rights->minigolf->write)) $mode = 'view'; // Force 'view' mode 
 else if ($action == 'create' || $action == 'edit') $mode = 'edit';
 
 $PDOdb = new TPDOdb;
-$object = new TTrou;
+$object = new TPartie;
 
 if (!empty($id)) $object->load($PDOdb, $id);
 elseif (!empty($ref)) $object->loadBy($PDOdb, $ref, 'ref');
