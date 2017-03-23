@@ -30,5 +30,9 @@ $o->init_db_by_vars($PDOdb);
 $o=new TTrou;
 $o->init_db_by_vars($PDOdb);
 
+$o=new TFicheScore;
+$o->init_db_by_vars($PDOdb);
+
+
 /*$o=new TMyModuleChild;
 $o->init_db_by_vars($PDOdb);*/

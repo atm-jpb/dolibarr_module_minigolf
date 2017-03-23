@@ -171,16 +171,16 @@ else {
 
 }
 
-echo "<input type=hidden name='id' value='".$id."' />";
+
 echo "<input type=hidden name='action' value='save' />";
 
 
-echo "<div name='newParcoursTrou' style='padding:20px;'>";
+echo "<div name='newPartie' style='padding:20px;'>";
 
 echo "<table  >";
 
 //function texte($pLib,$pName,$pVal,$pTaille,$pTailleMax=0,$plus='',$class="text", $default='')
-
+/*
 echo "<tr><td style='width:150px;' >". $langs->trans('parcoursId') . "</td><td style='width:150px;' >";
 echo $formCore->texte('', 'parcoursId', $parcoursId, 22, 255, '');
 
@@ -196,6 +196,46 @@ echo "</td><td style='padding-top:20px;'>";
 echo '<a class="button"  href="' .  dol_buildpath('/minigolf/listPartie.php?',1) .'">' . $langs->trans("backToParcours") . '</a>';
 
 echo "</td>";
+*/
+
+//on veux afficher la liste des parcours disponible
+
+//ainsi que la liste des joueurs existant.
+
+//a la validation de ces 2 informations on va générer dynamiquement un formulaire
+
+global $db;
+$sql = "SELECT rowid, name, difficulty FROM ".MAIN_DB_PREFIX."minigolf_trou ;";
+
+$resql = $db->query($sql);
+
+$html ="<form name='addTrouToParcours' method='post' action=''>";
+$html.='<select name="fk_trou">';
+if ($resql)   {
+    $res = $db->num_rows($resql);
+    $i = 0;
+    if ($res) {
+        while ($i < $res) {
+            $obj = $db->fetch_object($resql);
+            if ($obj) {
+                $html .= '<option value="'.$obj->rowid.'">'.$obj->name .'</option>';
+            }
+            $i++;
+        }
+    }
+}
+$html .= "</select>";
+$html .= "<input type='hidden' name='action' value='save'/>";
+$html .= "<input type='hidden' name='fk_parcours' value='".$parcoursId."'/>";
+$html .= "<input type='hidden' name='ordre' value='999'/>";
+
+$html .= "<input type='submit' value='".$langs->trans('Ajouter un Trou')."'/>";
+$html .= "</form>";
+
+echo $html;
+
+
+
 
 echo "</table>";
 

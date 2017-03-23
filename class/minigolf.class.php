@@ -97,6 +97,32 @@ class TTrou extends TObjetStd
 }
 
 
+class TFicheScore extends TObjetStd
+{
+
+    public function __construct()
+    {
+        global $conf,$langs,$db;
+
+        $this->set_table(MAIN_DB_PREFIX.'minigolf_score');
+
+        $this->add_champs('fk_partie', array('type' => 'integer', 'index' => true));
+        $this->add_champs('fk_trou', array('type' => 'integer', 'index' => false));
+        $this->add_champs('score', array('type' => 'integer', 'index' => false));
+
+
+        $this->_init_vars();
+
+        $this->start();
+
+        $this->errors = array();
+    }
+
+}
+
+
+
+
 
 //utils
 
