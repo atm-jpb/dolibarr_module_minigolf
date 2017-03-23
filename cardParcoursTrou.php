@@ -135,7 +135,7 @@ else
 {
     $head = minigolfAdminPrepareHead();
     $picto = 'generic';
-    dol_fiche_head($head, 'card', $langs->trans("cardParcoursTrouTitle"), 0, $picto);
+    dol_fiche_head($head, 'tabParcours', $langs->trans("cardParcoursTrouTitle"), 0, $picto);
 }
 
 $formCore = new TFormCore;

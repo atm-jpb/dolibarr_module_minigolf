@@ -32,6 +32,8 @@ ListeDesTrou = Liste des trous
 parcoursId = Nom du parcours
 userId = Joueur
 identifiantPartie = Partie n°
+ModuleMinigolf = Module Minigolf
+editionTroudunparcours = Edition de l'ordre des trous
 
 # CARD
 Newminigolf=Création minigolf

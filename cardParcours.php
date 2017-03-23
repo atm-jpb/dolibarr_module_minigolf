@@ -135,7 +135,7 @@ else
 	//$head = minigolf_PrepareHeadForParcoursOrDetails($parcours->id);
 
 	$picto = 'generic';
-	dol_fiche_head($head, 'card', $langs->trans("cardParcoursTitle"), 0, $picto);
+	dol_fiche_head($head, 'tabParcours', $langs->trans("ModuleMinigolf"), 0);
 }
 
 $formCore = new TFormCore;
@@ -186,7 +186,7 @@ echo "<table  >";
 echo "<tr><td style='width:150px;' >". $langs->trans('Nom du parcours') . "</td><td style='width:150px;' >";
 echo $formCore->texte('', 'name', $name, 22, 255, '');
 
-echo "<tr><td >". $langs->trans('difficulty') . "</td><td>";
+echo "<tr><td >". $langs->trans('Difficulty') . "</td><td>";
 echo $formCore->texte('', 'difficulty', $difficulty, 22, 255, '');
 
 echo "<tr><td>";

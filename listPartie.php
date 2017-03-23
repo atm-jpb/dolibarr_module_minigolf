@@ -2,7 +2,7 @@
 
 require 'config.php';
 dol_include_once('/minigolf/class/minigolf.class.php');
-dol_include_once('/mymodule/lib/minigolf.lib.php');
+dol_include_once('/minigolf/lib/minigolf.lib.php');
 
 if(empty($user->rights->minigolf->read)) accessforbidden();
 
@@ -80,7 +80,7 @@ echo $r->render($PDOdb, $sql, array(
 		'date_cre' , 'date_maj'
 	)
 	,'liste' => array(
-		'titre' => $langs->trans('ListeDesParties')
+		'titre' => $langs->trans('Liste Des Parties')
 		,'image' => img_picto('','title_generic.png', '', 0)
 		,'picto_precedent' => '<'
 		,'picto_suivant' => '>'
@@ -112,31 +112,3 @@ llxFooter('');
 /**
  * TODO remove if unused
  */
-
-function _getUserNameFromId($fk_user)
-{
-	global $db;
-	
-	$u = new User($db);
-	if ($u->fetch($fk_user) > 0)
-	{
-		return $u->getNomUrl(1);
-	}
-	
-	return '';
-}
-
-
-
-function _getParcoursNameFromId($id)
-{
-
-    $PDOdb = new TPDOdb;
-
-    $obj = new TParcours;
-
-    $obj->load($PDOdb, $id);
-
-    return $obj->name;
-
-}

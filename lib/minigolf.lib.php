@@ -77,11 +77,11 @@ function minigolfPrepareHeadForParcoursCard($id)
 
     $head[$h][0] = dol_buildpath("/minigolf/cardParcours.php?action=edit&id=", 1) .$id; //link
     $head[$h][1] = $langs->trans("Editer parcours"); // label
-    $head[$h][2] = 'parcoursList'; //id link
+    $head[$h][2] = 'tabParcours'; //id link
     $h++;
     $head[$h][0] = dol_buildpath("/minigolf/listParcoursTrou.php?action=edit&parcoursId=", 1).$id;
     $head[$h][1] = $langs->trans("Editer les trous associés");
-    $head[$h][2] = 'trouList';
+    $head[$h][2] = 'tabTrous';
     $h++;
 
 
@@ -138,4 +138,48 @@ function getFormConfirm(&$PDOdb, &$form, &$object, $action)
     }
 
     return $formconfirm;
+}
+
+
+
+function _getTrouNameFromId($id)
+{
+
+    $PDOdb = new TPDOdb;
+
+    $obj = new TTrou;
+
+    $obj->load($PDOdb, $id);
+
+    return $obj->name;
+
+}
+
+
+function _getUserNameFromId($fk_user)
+{
+    global $db;
+
+    $u = new User($db);
+    if ($u->fetch($fk_user) > 0)
+    {
+        return $u->getNomUrl(1);
+    }
+
+    return '';
+}
+
+
+
+function _getParcoursNameFromId($id)
+{
+
+    $PDOdb = new TPDOdb;
+
+    $obj = new TParcours;
+
+    $obj->load($PDOdb, $id);
+
+    return $obj->name;
+
 }

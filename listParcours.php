@@ -2,7 +2,7 @@
 
 require 'config.php';
 dol_include_once('/minigolf/class/minigolf.class.php');
-dol_include_once('/mymodule/lib/minigolf.lib.php');
+dol_include_once('/minigolf/lib/minigolf.lib.php');
 
 if(empty($user->rights->minigolf->read)) accessforbidden();
 
