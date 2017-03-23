@@ -19,6 +19,7 @@ $hookmanager->initHooks(array('mymodulelist'));
  * Actions
  */
 
+
 $parameters=array();
 $reshook=$hookmanager->executeHooks('doActions',$parameters,$object);    // Note that $action and $object may have been modified by some hooks
 if ($reshook < 0) setEventMessages($hookmanager->error, $hookmanager->errors, 'errors');
@@ -28,6 +29,8 @@ if (empty($reshook))
 	// do action from GETPOST ...
 
     // Code go here
+
+
 
 
 

@@ -29,6 +29,9 @@ minigolfList=Liste minigolf
 Nominigolf=(vide)
 NoMyModule = Pas d'info à afficher
 ListeDesTrou = Liste des trous
+parcoursId = Nom du parcours
+userId = Joueur
+identifiantPartie = Partie n°
 
 # CARD
 Newminigolf=Création minigolf

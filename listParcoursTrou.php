@@ -2,7 +2,7 @@
 
 require 'config.php';
 dol_include_once('/minigolf/class/minigolf.class.php');
-dol_include_once('/mymodule/lib/minigolf.lib.php');
+dol_include_once('/minigolf/lib/minigolf.lib.php');
 
 if(empty($user->rights->minigolf->read)) accessforbidden();
 
@@ -39,6 +39,8 @@ if (empty($reshook))
  * View
  */
 
+
+
 llxHeader('',$langs->trans('MyModuleList'),'','');
 
 //$type = GETPOST('type');
@@ -49,10 +51,14 @@ $sql = 'SELECT t.rowid, t.name, t.difficulty' ; //, t.date_cre, t.date_maj, \'\'
 
 $sql.= ' FROM '.MAIN_DB_PREFIX.'minigolf_parcours t ';
 
+
 //$sql.= ' WHERE 1=1';
 //$sql.= ' AND t.entity IN ('.getEntity('MyModule', 1).')';
 //if ($type == 'mine') $sql.= ' AND t.fk_user = '.$user->id;
 
+$head = minigolfPrepareHeadForParcoursCard($parcoursId);
+
+dol_fiche_head($head, 'card', $langs->trans("cardParcoursTitle"), 0, $picto);
 
 $formcore = new TFormCore($_SERVER['PHP_SELF'], 'form_list_minigolfParcours', 'GET');
 

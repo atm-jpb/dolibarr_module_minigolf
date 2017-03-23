@@ -13,6 +13,7 @@ $PDOdb = new TPDOdb;
 
 $object = new TTrou();
 
+
 $hookmanager->initHooks(array('mymodulelist'));
 
 /*

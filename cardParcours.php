@@ -131,7 +131,9 @@ if ($action == 'create' && $mode == 'edit')
 }
 else
 {
-	$head = minigolfAdminPrepareHead();
+	$head = minigolfPrepareHeadForParcoursCard($id);
+	//$head = minigolf_PrepareHeadForParcoursOrDetails($parcours->id);
+
 	$picto = 'generic';
 	dol_fiche_head($head, 'card', $langs->trans("cardParcoursTitle"), 0, $picto);
 }

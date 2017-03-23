@@ -77,10 +77,10 @@ echo $r->render($PDOdb, $sql, array(
 	)*/
 	,'translate' => array()
 	,'hide' => array(
-		'rowid' , 'date_cre' , 'date_maj'
+		'date_cre' , 'date_maj'
 	)
 	,'liste' => array(
-		'titre' => $langs->trans('MyModuleList')
+		'titre' => $langs->trans('ListeDesParties')
 		,'image' => img_picto('','title_generic.png', '', 0)
 		,'picto_precedent' => '<'
 		,'picto_suivant' => '>'
@@ -89,13 +89,15 @@ echo $r->render($PDOdb, $sql, array(
 		,'picto_search' => img_picto('','search.png', '', 0)
 	)
 	,'title'=>array(
-		'name' => $langs->trans('nom.')
-		,'difficulty' => $langs->trans('Difficulté')
+		'userId' => $langs->trans('userId')
+        ,'parcoursId' => $langs->trans('parcoursId')
 		,'date_cre' => $langs->trans('DateCre')
 		,'date_maj' => $langs->trans('DateMaj')
+        ,'rowid' => $langs->trans('identifiantPartie')
 	)
 	,'eval'=>array(
-//		'fk_user' => '_getUserNomUrl(@val@)' // Si on a un fk_user dans notre requête
+		'userId' => '_getUserNameFromId(@val@)' // Si on a un fk_user dans notre requête
+        ,'parcoursId' => '_getParcoursNameFromId(@val@)'
 	)
 ));
 
@@ -110,7 +112,8 @@ llxFooter('');
 /**
  * TODO remove if unused
  */
-function _getUserNomUrl($fk_user)
+
+function _getUserNameFromId($fk_user)
 {
 	global $db;
 	
@@ -121,4 +124,19 @@ function _getUserNomUrl($fk_user)
 	}
 	
 	return '';
+}
+
+
+
+function _getParcoursNameFromId($id)
+{
+
+    $PDOdb = new TPDOdb;
+
+    $obj = new TParcours;
+
+    $obj->load($PDOdb, $id);
+
+    return $obj->name;
+
 }

@@ -54,6 +54,42 @@ function minigolfAdminPrepareHead()
     return $head;
 }
 
+
+function minigolfPrepareHeadForParcoursCard($id)
+{
+    global $langs, $conf;
+
+    $langs->load("minigolf@minigolf");
+
+    $h = 0;
+    $head = array();
+
+
+    // Show more tabs from modules
+    // Entries must be declared in modules descriptor with line
+    //$this->tabs = array(
+    //	'entity:+tabname:Title:@minigolf:/minigolf/mypage.php?id=__ID__'
+    //); // to add new tab
+    //$this->tabs = array(
+    //	'entity:-tabname:Title:@minigolf:/minigolf/mypage.php?id=__ID__'
+    //); // to remove a tab
+
+
+    $head[$h][0] = dol_buildpath("/minigolf/cardParcours.php?action=edit&id=", 1) .$id; //link
+    $head[$h][1] = $langs->trans("Editer parcours"); // label
+    $head[$h][2] = 'parcoursList'; //id link
+    $h++;
+    $head[$h][0] = dol_buildpath("/minigolf/listParcoursTrou.php?action=edit&parcoursId=", 1).$id;
+    $head[$h][1] = $langs->trans("Editer les trous associés");
+    $head[$h][2] = 'trouList';
+    $h++;
+
+
+   // complete_head_from_modules($conf, $langs, $object, $head, $h, 'minigolf');
+
+    return $head;
+}
+
 /**
  * Return array of tabs to used on pages for third parties cards.
  *
