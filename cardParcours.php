@@ -38,12 +38,21 @@ if (empty($reshook))
 {
 	$error = 0;
 	switch ($action) {
-		case 'save':
+
+        case 'new' :
+
+            $mode = 'edit';
+            $id = null; // failsafe si on essaye d'injecter id a la main
+
+            break;
+
+
+        case 'save':
 
 
 //            var_dump($_POST);
 
-            if( $id > 0 ) { $object->load($PDOdb, $id);}
+
 
             $object->set_values($_POST); // Set standard attributes
 
@@ -72,7 +81,7 @@ if (empty($reshook))
 
 			$object->save($PDOdb, empty($object->ref)); // ref ?
 			
-			header('Location: '.dol_buildpath('/minigolf/cardParcours.php', 1).'?id='.$object->getId());
+			header('Location: '.dol_buildpath('/minigolf/listParcours.php', 1) ) ; //.'?id= .$object->getId());
 			exit;
 			
 			break;

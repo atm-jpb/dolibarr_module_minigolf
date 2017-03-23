@@ -38,7 +38,17 @@ if (empty($reshook))
 {
 	$error = 0;
 	switch ($action) {
-		case 'save':
+
+        case 'new' :
+
+            $mode = 'edit';
+            $id = null; // failsafe si on essaye d'injecter id a la main
+
+            break;
+
+
+
+        case 'save':
 
             if( $id > 0 ) { $object->load($PDOdb, $id);}
 
@@ -64,7 +74,7 @@ if (empty($reshook))
 			
 			$object->save($PDOdb, empty($object->ref)); // ref ?
 			
-			header('Location: '.dol_buildpath('/minigolf/cardTrou.php', 1).'?id='.$object->getId());
+			header('Location: '.dol_buildpath('/minigolf/listTrou.php', 1) );
 			exit;
 			
 			break;

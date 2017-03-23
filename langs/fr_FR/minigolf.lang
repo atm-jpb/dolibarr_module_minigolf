@@ -36,4 +36,5 @@ minigolfCard=Fiche minigolf
 cardTrouTitle = Affichage d'un trou
 ajouterTrou = Nom du trou
 Difficulty = Difficulté
+backToParcours = Retour à la liste
 
