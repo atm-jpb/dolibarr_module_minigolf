@@ -11,18 +11,19 @@ $langs->load('minigolf@minigolf');
 
 $PDOdb = new TPDOdb;
 
-$object = new TParcoursTrou();
+$object = new TFicheScore();
 
-$parcoursId = GETPOST('parcoursId');
+//$parcoursId = GETPOST('parcoursId');
+
+$partieId = GETPOST('partieId');
+
 $action = GETPOST('action');
 
 if (empty($action) ) $action = $mode = 'view';
 
 
+
 $hookmanager->initHooks(array('mymodulelist'));
-
-
-
 
 
 /*
@@ -44,21 +45,20 @@ if (empty($reshook))
 
         case 'save' :
 
-            $parcoursId = GETPOST('fk_parcours');
-
             $object->set_values($_POST); // Set standard attributes
 
             var_dump($object);exit;
 
             $object->save($PDOdb, empty($object->ref)); // ref ?
 
-            header('Location: '.dol_buildpath('/minigolf/listParcoursTrou.php', 1)."?action=edit&parcoursId=$parcoursId"  ); //.'?id= .$object->getId());
+            header('Location: '.dol_buildpath('/minigolf/listScoreTrouParPartie.php', 1) ) ;
             exit;
 
             break;
 
         case 'delete' :
 
+            /*
             $rowid = GETPOST('rowid');
 
             $object->load($PDOdb, $rowid);
@@ -70,6 +70,87 @@ if (empty($reshook))
             header('Location: '.dol_buildpath('/minigolf/listParcoursTrou.php', 1)."?action=edit&parcoursId=$object->fk_parcours"  ); //.'?id= .$object->getId());
             exit;
 
+            */
+
+            break;
+
+        case 'create' :
+            // aucunes info dispo, on demande pour quel joueur et quel parcours
+
+            //dol_fiche_head();
+
+            //$form = new Form($PDOdb);
+
+            llxHeader('',$langs->trans('FicheScore') );
+
+            $sql = "SELECT rowid, name, difficulty FROM ".MAIN_DB_PREFIX."minigolf_parcours ;";
+
+            $resql = $db->query($sql);
+
+            //quel parcours ?
+            echo $langs->trans("Veuillez choisir un parcours");
+
+            $html ="<form name='SelectAParcours' method='post' action=''>";
+            $html.='<select name="fk_parcours">';
+            if ($resql)   {
+                $res = $db->num_rows($resql);
+                $i = 0;
+                if ($res) {
+                    while ($i < $res) {
+                        $obj = $db->fetch_object($resql);
+                        if ($obj) {
+                            $html .= '<option value="'.$obj->rowid.'">'.$obj->name .'</option>';
+                        }
+                        $i++;
+                    }
+                }
+            }
+            $html .= "</select>";
+
+
+            // quel joueur ?
+            echo $langs->trans("Veuillez choisir un joueur");
+
+            $sql = "SELECT rowid, firstname, lastname FROM ".MAIN_DB_PREFIX."user ;";
+
+            $resql = $db->query($sql);
+
+
+            $html.='<select name="userId">';
+            if ($resql)   {
+                $res = $db->num_rows($resql);
+                $i = 0;
+                if ($res) {
+                    while ($i < $res) {
+                        $obj = $db->fetch_object($resql);
+                        if ($obj) {
+                            $html .= '<option value="'.$obj->rowid.'">'.$obj->lastname.' '. $obj->firstname .'</option>';
+                        }
+                        $i++;
+                    }
+                }
+            }
+            $html .= "</select>";
+
+            $html .= "<input type='hidden' name='action' value='createFicheScore'/>";
+
+            $html .= "<input type='submit' value='".$langs->trans('CommencerLaSaisie')."'/>";
+
+            $html .= "</form>";
+
+            echo $html;
+
+            llxFooter('');
+
+            exit;
+            break;
+
+        case 'createFicheScore' :
+
+//            var_dump($_POST);
+            Echo " OUVRIR FORM SAISI PAR TROU";
+
+            exit;
             break;
 
     }
@@ -85,45 +166,55 @@ if (empty($reshook))
 
 
 
-llxHeader('',$langs->trans('Trou du parcours') . _getParcoursNameFromId($parcoursId)  ,'','');
 
 //$type = GETPOST('type');
 //if (empty($user->rights->mymodule->all->read)) $type = 'mine';
 
 // TODO ajouter les champs de son objet que l'on souhaite afficher
-$sql = 'SELECT fk_trou, ordre, rowid as dellink' ; //, t.date_cre, t.date_maj, \'\' AS action';
-
-$sql.= ' FROM '.MAIN_DB_PREFIX.'minigolf_parcours_trou ';
-
-$sql.= ' WHERE fk_parcours = ' . $parcoursId . ';';
 
 
-//$sql.= ' WHERE 1=1';
-//$sql.= ' AND t.entity IN ('.getEntity('MyModule', 1).')';
-//if ($type == 'mine') $sql.= ' AND t.fk_user = '.$user->id;
 
-$head = minigolfPrepareHeadForParcoursCard($parcoursId);
 
-dol_fiche_head($head, 'tabTrous', $langs->trans("ModuleMinigolf"), 0, $picto);
 
-$formCore = new TFormCore($_SERVER['PHP_SELF'], 'form_list_minigolfParcours', 'POST');
+$find = false;
+if(!empty($partieId) ) {
+
+    $find= true;
+
+    $sql .= 'SELECT p.rowid , t.fk_partie , t.fk_trou, t.score';
+    $sql .= ' FROM llx_minigolf_partie p';
+    $sql .= ' LEFT JOIN llx_minigolf_score t ON p.rowid = t.fk_partie';
+    $sql .= " WHERE p.rowid = $partieId ";
+
+}
+else  {
+
+
+}
+
+//$head = '';//minigolf_prepare_head();
+
+llxHeader('',$langs->trans('FicheScore') );
+
+//dol_fiche_head($head);
+
+$formCore = new TFormCore($_SERVER['PHP_SELF'], 'form_saisie_nouvelle_partie', 'POST');
 
 $formCore->Set_typeaff($mode);
 
-$form = new Form($PDOdb);
+//$form = new Form($PDOdb);
+
 $nbLine = !empty($user->conf->MAIN_SIZE_LISTE_LIMIT) ? $user->conf->MAIN_SIZE_LISTE_LIMIT : $conf->global->MAIN_SIZE_LISTE_LIMIT;
 
 $r = new TListviewTBS('minigolf');
+
 echo $r->render($PDOdb, $sql, array(
 	'view_type' => 'list' // default = [list], [raw], [chart]
 	,'limit'=>array(
 		'nbLine' => $nbLine
 	)
 	,'subQuery' => array()
-,'link' => array('name' => '<a href="cardParcoursTrou.php?id=@rowid@&action=edit">@val@</a>'
-    , 'ordre' => '<input name="ordre" type="text" value="@val@"/>'
-    , 'dellink' => '<a href="listParcoursTrou.php?rowid=@dellink@&action=delete">X</a>'
-    )
+,'link' => array()
 	,'type' => array(
 		'date_cre' => 'date' // [datetime], [hour], [money], [number], [integer]
 		,'date_maj' => 'date'
@@ -137,10 +228,10 @@ echo $r->render($PDOdb, $sql, array(
 	)*/
 	,'translate' => array()
 	,'hide' => array(
-		'rowid' , 'date_cre' , 'date_maj'
+		'date_cre' , 'date_maj'
 	)
 	,'liste' => array(
-		'titre' => $langs->trans('editionTroudunparcours') . _getParcoursNameFromId($fk_parcours)
+		'titre' => $langs->trans('SaisieNouvellePartieSur') . _getParcoursNameFromId($fk_parcours)
 		,'image' => img_picto('','title_generic.png', '', 0)
 		,'picto_precedent' => '<'
 		,'picto_suivant' => '>'
@@ -149,13 +240,11 @@ echo $r->render($PDOdb, $sql, array(
 		,'picto_search' => img_picto('','search.png', '', 0)
 	)
 	,'title'=>array(
-		'fk_trou' => $langs->trans('trou')
-		,'ordre' => $langs->trans('ordre')
-		,'date_cre' => $langs->trans('DateCre')
+		'date_cre' => $langs->trans('DateCre')
 		,'date_maj' => $langs->trans('DateMaj')
 	)
 	,'eval'=>array(
-		'fk_trou' => '_getTrouNameFromId(@val@)' // Si on a un fk_user dans notre requête
+
 	)
 ));
 
@@ -172,7 +261,7 @@ echo '<a class="button"  href="' .  dol_buildpath('/minigolf/listParcours.php?',
 
 $formCore->end_form();
 
-
+/*
 //ajouter un trou a un parcours
 // on affiche la liste des trous associer au parcours  $parcoursId
 //todo a remplacer un jour par appel obj abricot
@@ -205,7 +294,7 @@ $html .= "<input type='submit' value='".$langs->trans('Ajouter un Trou')."'/>";
 $html .= "</form>";
 
 echo $html;
-
+*/
 
 
 llxFooter('');

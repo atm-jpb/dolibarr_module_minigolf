@@ -376,7 +376,7 @@ class modminigolf extends DolibarrModules
             'titre'=>$langs->trans('NouvellePartie'),
             'mainmenu'=>'minigolf',
             'leftmenu'=>'',
-            'url'=>'custom/minigolf/cardPartie.php?action=create',
+            'url'=>'custom/minigolf/listScoreTrouParPartie.php?action=create',
             'langs'=>'minigolf@minigolf',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
             'position'=>100+$r,
             'enabled'=>'$conf->minigolf->enabled',	// Define condition to show or hide menu entry. Use '$conf->missionorder->enabled' if entry must be visible if module is enabled.

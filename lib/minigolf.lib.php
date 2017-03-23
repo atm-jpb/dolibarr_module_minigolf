@@ -96,7 +96,7 @@ function minigolfPrepareHeadForParcoursCard($id)
  * @param 	Tminigolf	$object		Object company shown
  * @return 	array				Array of tabs
  */
-function minigolf_prepare_head(TTrou $object)
+function minigolf_prepare_head( $object) // typage enlevé, car pas utilisé (pour le moment)
 {
     global $db, $langs, $conf, $user;
     $h = 0;

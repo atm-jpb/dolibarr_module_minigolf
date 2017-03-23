@@ -48,7 +48,7 @@ if (empty($reshook))
 
             $object->set_values($_POST); // Set standard attributes
 
-            var_dump($object);exit;
+            //var_dump($object);exit;
 
             $object->save($PDOdb, empty($object->ref)); // ref ?
 
