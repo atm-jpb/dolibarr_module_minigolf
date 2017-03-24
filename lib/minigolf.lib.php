@@ -183,3 +183,22 @@ function _getParcoursNameFromId($id)
     return $obj->name;
 
 }
+
+function getNewRowIdFrom($tablename){
+
+    global $db;
+
+    $sql = "SELECT MAX(rowid) as lastId FROM " .MAIN_DB_PREFIX. $tablename;
+
+    $resql = $db->query($sql);
+
+    $obj = $db->fetch_object($resql);
+    if ($obj) {
+
+        return (int) $obj->lastId +1;
+
+    }
+    else return 1;
+
+
+}

@@ -78,8 +78,6 @@ if (empty($reshook))
 
             //dol_fiche_head();
 
-            //$form = new Form($PDOdb);
-
             //var_dump($_REQUEST);exit;
 
             llxHeader('',$langs->trans('Choisir Parcour et Joueur') );
@@ -147,17 +145,62 @@ if (empty($reshook))
             break;
 
         case 'createFicheScore' :
-            echo "createFicheScore OK";
 
-            var_dump($_REQUEST);
+            //var_dump($_REQUEST);
 
-            // creation d'un formulaire en fonction du parcours choisi
 
-            //$parcoursId = ;
 
-            //$userId =
+            $parcoursId = GETPOST('fk_parcours') ;
+
+            $userId = GETPOST('userId');
 
             // recuperation de la liste des trous du parcours
+
+            //-----
+            global $db;
+
+            $sql  = "SELECT fk_trou , ordre";
+            $sql .= " FROM ".MAIN_DB_PREFIX."minigolf_parcours_trou ";
+            $sql .= " WHERE fk_parcours = " . $parcoursId;
+            $sql .= " ORDER BY ordre;";
+
+            $resql = $db->query($sql);
+
+            //var_dump($_REQUEST);
+            //var_dump($resql);exit;
+
+            // creation d'un formulaire en fonction du parcours choisi
+            $html ="<form name='saisirScoreParTrou' method='get' action=''>";
+            $html .= "<table>";
+            if ($resql)   {
+                $res = $db->num_rows($resql);
+                $i = 0;
+                if ($res) {
+                    while ($i < $res) {
+                        $obj = $db->fetch_object($resql);
+                        if ($obj) {
+
+                            $html .= '<tr><td>'.$langs->trans("Score pour le trou n° :").$obj->fk_trou.'</td>';
+                            $html .= '<td><input type="text" name="'.$obj->fk_trou.'"></td></tr>';
+                        }
+                        $i++;
+                    }
+                }
+            }
+            $html .= "</table>";
+
+            $html .= "<input type='hidden' name='action' value='saveFicheScore'/>";
+            $html .= "<input type='hidden' name='fk_parcours' value='".$parcoursId."'/>";
+            $html .= "<input type='hidden' name='userId' value='".$userId."'/>";
+            $html .= "<input type='submit' value='".$langs->trans('Enregistrer la Fiche de score')."'/>";
+            $html .= "</form>";
+
+            llxHeader();
+            echo $html;
+            llxFooter();
+
+
+            //-----
 
             // generation de la liste
 
@@ -165,6 +208,71 @@ if (empty($reshook))
 
             exit;
             break;
+
+        case 'saveFicheScore' :
+
+            $userId = GETPOST('userId');
+
+            $fk_parcours = GETPOST('fk_parcours');
+
+            var_dump($_REQUEST);exit;
+
+            //entrée : on récupere un listing de score pour chaque trou d'un parcours
+
+            // on doit inserer dans la table minigolf_score (champs : fk_partie, fk_trou , score)
+
+            // il faudrait le faire avec un object abricot, mais je ne suis pas encore assez a l'aise avec pour le produire en 10min
+
+            // sql donc :
+
+            //on se renseigne sur le nouveau numéro de partie
+            $newIdPartie = getNewRowIdFrom('minigolf_partie');
+            //data ok, insertion bdd
+            //insertion nouvelle partie ( parcours , user )
+
+            $sql = "INSERT INTO " .MAIN_DB_PREFIX. "minigolf_partie (rowid, parcoursId, userId)";
+            $sql .= " VALUES ('$newIdPartie','$fk_parcours','$userId') ;" ;
+
+
+            //insertion score
+
+            $sql .= "INSERT INTO " .MAIN_DB_PREFIX. "minigolf_score (rowid, fk_partie , fk_trou , score)";
+            $sql .= " VALUES ( ";
+            // pour chaque 'score' (identifié par l'id du trou) on insert fk_partie, fk_trou, score
+            $newIdScore = getNewRowIdFrom('minigolf_score');
+
+            //var_dump($_GET);exit;
+            $i=0;
+            foreach ($_GET as $trouId => $score){
+                if ( empty( (int) $trouId) ) break;
+                if ($i>0) $sql .= ",";
+                //echo "score for trou $trouId : $score <br/>";
+                $sql .= "('$newIdScore','$newIdPartie','$trouId','$score')" ;
+
+                $i++;
+            }
+            $sql .= ') ;';
+
+            // echo $sql;
+
+            $resql = $db->query($sql);
+
+            if ($resql == true) {
+                // insertion ok
+                setEventMessage("Ajout de la partie $newIdPartie réalisée");
+
+                header('Location: '.dol_buildpath('/minigolf/listPartie.php', 1) ) ;
+                exit;
+            }
+            else {
+                // faire vérifier le formulaire
+                setEventMessage("Erreur : veuillez vérifier l'intégrité des données du formulaire et réessayer");
+            }
+
+            exit;
+
+            break;
+
 
     }
 

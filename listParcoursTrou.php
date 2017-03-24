@@ -44,16 +44,47 @@ if (empty($reshook))
 
         case 'save' :
 
+            //var_dump($_REQUEST);exit;
+
             $parcoursId = GETPOST('fk_parcours');
 
-            $object->set_values($_POST); // Set standard attributes
+            //$object->set_values($_POST); // Set standard attributes
 
             //var_dump($object);exit;
 
-            $object->save($PDOdb, empty($object->ref)); // ref ?
+            //$object->save($PDOdb, empty($object->ref)); // ref ?
+
+            // tellement plus simple avec abricot ....
+
+            // on doit mettre a jour le champ ordre de la table parcours_trou.
+            // update de la ligne fesant figurer le fk_parcours et le fk_trou.
+
+            $sql ="";
+            //for each trou dans le post
+            foreach ($_POST as $trouId => $ordre){
+                if ( empty( (int) $trouId) ) break;
+                $sql .= "UPDATE ".MAIN_DB_PREFIX."minigolf_parcours_trou SET ordre = $ordre WHERE fk_trou = '$trouId' and fk_parcours = '$parcoursId' ; ";
+            }
+
+            //echo $sql;exit;
+
+
+            $resql = $db->query($sql);
+
+            if ($resql == true) {
+                // insertion ok
+                setEventMessage("Mise à jour de l'ordre des trous effectuée");
+
+            }
+            else {
+                // faire vérifier le formulaire
+                setEventMessage("Erreur : veuillez vérifier l'intégrité des données du formulaire et réessayer");
+
+            }
 
             header('Location: '.dol_buildpath('/minigolf/listParcoursTrou.php', 1)."?action=edit&parcoursId=$parcoursId"  ); //.'?id= .$object->getId());
             exit;
+
 
             break;
 
@@ -116,14 +147,12 @@ $nbLine = !empty($user->conf->MAIN_SIZE_LISTE_LIMIT) ? $user->conf->MAIN_SIZE_LI
 $r = new TListviewTBS('minigolf');
 echo $r->render($PDOdb, $sql, array(
 	'view_type' => 'list' // default = [list], [raw], [chart]
-	,'limit'=>array(
-		'nbLine' => $nbLine
-	)
-	,'subQuery' => array()
-,'link' => array('name' => '<a href="cardParcoursTrou.php?id=@rowid@&action=edit">@val@</a>'
-    , 'ordre' => '<input name="ordre" type="text" value="@val@"/>'
+
+	, 'subQuery' => array()
+    , 'link' => array('name' => '<a href="cardParcoursTrou.php?id=@rowid@&action=edit">@val@</a>'
+    , 'ordre' => '<input name="@fk_trou@" type="text" value="@val@"/>'
     , 'dellink' => '<a href="listParcoursTrou.php?rowid=@dellink@&action=delete">X</a>'
-    , 'dellink' => $langs->trans('dellink')
+
     )
 	,'type' => array(
 		'date_cre' => 'date' // [datetime], [hour], [money], [number], [integer]
@@ -154,6 +183,7 @@ echo $r->render($PDOdb, $sql, array(
 		,'ordre' => $langs->trans('ordre')
 		,'date_cre' => $langs->trans('DateCre')
 		,'date_maj' => $langs->trans('DateMaj')
+        ,'dellink' => $langs->trans('dellink')
 	)
 	,'eval'=>array(
 		'fk_trou' => '_getTrouNameFromId(@val@)' // Si on a un fk_user dans notre requête
@@ -182,7 +212,7 @@ $sql = "SELECT rowid, name, difficulty FROM ".MAIN_DB_PREFIX."minigolf_trou ;";
 
 $resql = $db->query($sql);
 
-$html ="<form name='addTrouToParcours' method='post' action=''>";
+$html ="<br/><br/><form name='addTrouToParcours' method='post' action=''>";
 $html.='<select name="fk_trou">';
 if ($resql)   {
     $res = $db->num_rows($resql);
