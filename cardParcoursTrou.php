@@ -25,7 +25,7 @@ elseif (!empty($ref)) $object->loadBy($PDOdb, $ref, 'ref');
 
 //var_dump($object);
 
-$hookmanager->initHooks(array('mymodulecard', 'globalcard'));
+$hookmanager->initHooks(array('minigolfCardHook', 'globalcard'));
 
 /*
  * Actions

@@ -13,7 +13,9 @@ $PDOdb = new TPDOdb;
 
 $object = new TParcours();
 
-$hookmanager->initHooks(array('mymodulelist'));
+$action = GETPOST('action');
+
+$hookmanager->initHooks(array('minigolfHook'));
 
 /*
  * Actions
@@ -28,7 +30,23 @@ if (empty($reshook))
 {
 	// do action from GETPOST ...
 
-    // Code go here
+    switch ($action){
+
+        case 'delete' :
+
+            $rowid = GETPOST('rowid');
+
+            $object->load($PDOdb, $rowid);
+
+            $object->to_delete = true;
+
+            $object->save($PDOdb);
+
+            header('Location: '.dol_buildpath('/minigolf/listParcours.php', 1) );
+            exit;
+
+            break;
+    }
 
 }
 
@@ -43,7 +61,7 @@ llxHeader('',$langs->trans('ListeDesParcours'),'','');
 //if (empty($user->rights->mymodule->all->read)) $type = 'mine';
 
 // TODO ajouter les champs de son objet que l'on souhaite afficher
-$sql = 'SELECT t.rowid, t.name, t.difficulty' ; //, t.date_cre, t.date_maj, \'\' AS action';
+$sql = 'SELECT t.rowid, t.name, t.difficulty , t.rowid as dellink' ; //, t.date_cre, t.date_maj, \'\' AS action';
 
 $sql.= ' FROM '.MAIN_DB_PREFIX.'minigolf_parcours t ';
 
@@ -64,7 +82,9 @@ echo $r->render($PDOdb, $sql, array(
 	)
 	,'subQuery' => array()
 
-    ,'link' => array('name' => '<a href="cardParcours.php?id=@rowid@&action=edit">@val@</a>' )
+    ,'link' => array('name' => '<a href="cardParcours.php?id=@rowid@&action=edit">@val@</a>'
+    , 'dellink' => '<a href="listParcours.php?rowid=@dellink@&action=delete">X</a>'
+    )
 
 	,'type' => array(
 		'date_cre' => 'date' // [datetime], [hour], [money], [number], [integer]
@@ -92,6 +112,7 @@ echo $r->render($PDOdb, $sql, array(
 	)
 	,'title'=>array(
 		'name' => $langs->trans('nom.')
+        ,'dellink' => $langs->trans('dellink')
 		,'difficulty' => $langs->trans('Difficulté')
 		,'date_cre' => $langs->trans('DateCre')
 		,'date_maj' => $langs->trans('DateMaj')
@@ -106,6 +127,8 @@ $reshook=$hookmanager->executeHooks('printFieldListFooter', $parameters, $object
 print $hookmanager->resPrint;
 
 $formcore->end_form();
+
+echo '<a class="button"  href="' .  dol_buildpath('/minigolf/cardParcours.php',1) .'?action=create">' . $langs->trans("Créer Nouveau Parcours") . '</a>';
 
 llxFooter('');
 

@@ -23,7 +23,7 @@ $object = new TPartie();
 if (!empty($id)) $object->load($PDOdb, $id);
 elseif (!empty($ref)) $object->loadBy($PDOdb, $ref, 'ref');
 
-$hookmanager->initHooks(array('mymodulecard', 'globalcard'));
+$hookmanager->initHooks(array('minigolfCardHook', 'globalcard'));
 
 /*
  * Actions

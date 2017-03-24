@@ -137,7 +137,8 @@ class modminigolf extends DolibarrModules
 		// 'thirdparty'       to add a tab in third party view
 		// 'user'             to add a tab in user view
 
-        //$this->tabs = array();
+        //onglet sur user
+        $this->tabs = array('user:+PartieDeGolf:Partie de golf:minigolf@minigolf:$user->rights->minigolf->read:/minigolf/listPartie.php?userId=__ID__');
 
         // Dictionaries
 	    if (! isset($conf->minigolf->enabled))
@@ -240,10 +241,10 @@ class modminigolf extends DolibarrModules
 		$this->menu[$r]=array(	
 			'fk_menu'=>'fk_mainmenu=minigolf',			                // Put 0 if this is a top menu
 			'type'=>'top',			                // This is a Top menu entry
-			'titre'=>$langs->trans('Parcours'),
+			'titre'=>$langs->trans('Minigolf'),
 			'mainmenu'=>'minigolf',
 			'leftmenu'=>'minigolf_left',
-			'url'=>'custom/minigolf/listParcours.php',
+			'url'=>'custom/minigolf/listPartie.php',
 			'langs'=>'minigolf@minigolf',	        // Lang file to use (without .lang) by module. File must be in langs/code_CODE/ directory.
 			'position'=>100+$r,
 			'enabled'=>'$conf->minigolf->enabled',	// Define condition to show or hide menu entry. Use '$conf->missionorder->enabled' if entry must be visible if module is enabled.

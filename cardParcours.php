@@ -23,7 +23,7 @@ $object = new TParcours;
 if (!empty($id)) $object->load($PDOdb, $id);
 elseif (!empty($ref)) $object->loadBy($PDOdb, $ref, 'ref');
 
-$hookmanager->initHooks(array('mymodulecard', 'globalcard'));
+$hookmanager->initHooks(array('minigolfCardHook', 'globalcard'));
 
 /*
  * Actions
@@ -121,7 +121,7 @@ if (empty($reshook))
  * View
  */
 
-$title=$langs->trans("minigolf");
+$title=$langs->trans("Gestion des parcours");
 llxHeader('',$title);
 
 if ($action == 'create' && $mode == 'edit')

@@ -21,11 +21,9 @@ $action = GETPOST('action');
 
 if (empty($action) ) $action = $mode = 'view';
 
+$hookmanager->initHooks(array('minigolfHook'));
 
-
-$hookmanager->initHooks(array('mymodulelist'));
-
-
+//var_dump($_REQUEST);exit;
 /*
  * Actions
  */
@@ -47,7 +45,7 @@ if (empty($reshook))
 
             $object->set_values($_POST); // Set standard attributes
 
-            var_dump($object);exit;
+            //var_dump($object);exit;
 
             $object->save($PDOdb, empty($object->ref)); // ref ?
 
@@ -74,6 +72,7 @@ if (empty($reshook))
 
             break;
 
+
         case 'create' :
             // aucunes info dispo, on demande pour quel joueur et quel parcours
 
@@ -81,7 +80,9 @@ if (empty($reshook))
 
             //$form = new Form($PDOdb);
 
-            llxHeader('',$langs->trans('FicheScore') );
+            //var_dump($_REQUEST);exit;
+
+            llxHeader('',$langs->trans('Choisir Parcour et Joueur') );
 
             $sql = "SELECT rowid, name, difficulty FROM ".MAIN_DB_PREFIX."minigolf_parcours ;";
 
@@ -90,7 +91,7 @@ if (empty($reshook))
             //quel parcours ?
             echo $langs->trans("Veuillez choisir un parcours");
 
-            $html ="<form name='SelectAParcours' method='post' action=''>";
+            $html ="<form name='SelectAParcours' method='get' action=''>";
             $html.='<select name="fk_parcours">';
             if ($resql)   {
                 $res = $db->num_rows($resql);
@@ -146,14 +147,28 @@ if (empty($reshook))
             break;
 
         case 'createFicheScore' :
+            echo "createFicheScore OK";
 
-//            var_dump($_POST);
-            Echo " OUVRIR FORM SAISI PAR TROU";
+            var_dump($_REQUEST);
+
+            // creation d'un formulaire en fonction du parcours choisi
+
+            //$parcoursId = ;
+
+            //$userId =
+
+            // recuperation de la liste des trous du parcours
+
+            // generation de la liste
+
+
 
             exit;
             break;
 
     }
+
+
 
 
 
@@ -194,7 +209,7 @@ else  {
 
 //$head = '';//minigolf_prepare_head();
 
-llxHeader('',$langs->trans('FicheScore') );
+llxHeader('',$langs->trans('Saisir Nouvelle partie') );
 
 //dol_fiche_head($head);
 

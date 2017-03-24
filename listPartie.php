@@ -1,6 +1,7 @@
 <?php
 
 require 'config.php';
+require_once DOL_DOCUMENT_ROOT.'/core/lib/usergroups.lib.php';
 dol_include_once('/minigolf/class/minigolf.class.php');
 dol_include_once('/minigolf/lib/minigolf.lib.php');
 
@@ -13,7 +14,11 @@ $PDOdb = new TPDOdb;
 
 $object = new TPartie();
 
-$hookmanager->initHooks(array('mymodulelist'));
+$action = GETPOST('action');
+
+$userId = GETPOST('userId'); // en provenance d'une fiche utilisateur => on filtre la liste
+
+$hookmanager->initHooks(array('minigolfHook'));
 
 /*
  * Actions
@@ -27,7 +32,24 @@ if (empty($reshook))
 {
 	// do action from GETPOST ...
 
-    // Code go here
+    switch ($action){
+
+        case 'delete' :
+
+            $rowid = GETPOST('rowid');
+
+            $object->load($PDOdb, $rowid);
+
+            $object->to_delete = true;
+
+            $object->save($PDOdb);
+
+            header('Location: '.dol_buildpath('/minigolf/listPartie.php', 1) );
+            exit;
+
+            break;
+    }
+
 
 
 }
@@ -37,15 +59,34 @@ if (empty($reshook))
  * View
  */
 
-llxHeader('',$langs->trans('MyModuleList'),'','');
+llxHeader('',$langs->trans('Liste des parties'),'','');
+
+if (!empty($userId)){
+    global $user;
+
+    //TODO :check si les permissions grisent les onglets correctement
+
+    if ($userId == $user->id){
+
+            $myuser = $user;
+    }
+    else $myuser = $user->fetch($userId);
+
+    $head = user_prepare_head($myuser);
+
+    dol_fiche_head($head,'PartieDeGolf');
+}
+
+//generation formulaire
 
 //$type = GETPOST('type');
 //if (empty($user->rights->mymodule->all->read)) $type = 'mine';
 
-// TODO ajouter les champs de son objet que l'on souhaite afficher
-$sql = 'SELECT t.rowid, t.parcoursId, t.userId' ; //, t.date_cre, t.date_maj, \'\' AS action';
+$sql = 'SELECT t.rowid, t.parcoursId, t.userId , t.rowid as dellink' ; //, t.date_cre, t.date_maj, \'\' AS action';
 
 $sql.= ' FROM '.MAIN_DB_PREFIX.'minigolf_partie t ';
+
+if (!empty($userId) ) $sql .= "WHERE t.userId = $userId";
 
 //$sql.= ' WHERE 1=1';
 //$sql.= ' AND t.entity IN ('.getEntity('MyModule', 1).')';
@@ -63,7 +104,10 @@ echo $r->render($PDOdb, $sql, array(
 		'nbLine' => $nbLine
 	)
 	,'subQuery' => array()
-    ,'link' => array('name' => '<a href="cardPartie.php?id=@rowid@&action=edit">@val@</a>' )
+    ,'link' => array('rowid' => '<a href="cardPartie.php?id=@rowid@&action=edit">@val@</a>'
+    ,'parcoursId' => '<a href="cardParcours.php?id=@rowid@&action=edit">@val@</a>'
+    ,'dellink' => '<a href="listPartie.php?rowid=@dellink@&action=delete">X</a>'
+    )
 	,'type' => array(
 		'date_cre' => 'date' // [datetime], [hour], [money], [number], [integer]
 		,'date_maj' => 'date'
@@ -80,7 +124,7 @@ echo $r->render($PDOdb, $sql, array(
 		'date_cre' , 'date_maj'
 	)
 	,'liste' => array(
-		'titre' => $langs->trans('Liste Des Parties')
+		'titre' => empty(userId) ? $langs->trans('Liste Des Parties') : $langs->trans('Liste Des Parties') . ' :  ' . _getUserNameFromId($userId)
 		,'image' => img_picto('','title_generic.png', '', 0)
 		,'picto_precedent' => '<'
 		,'picto_suivant' => '>'
@@ -90,6 +134,7 @@ echo $r->render($PDOdb, $sql, array(
 	)
 	,'title'=>array(
 		'userId' => $langs->trans('userId')
+        ,'dellink' => $langs->trans('dellink')
         ,'parcoursId' => $langs->trans('parcoursId')
 		,'date_cre' => $langs->trans('DateCre')
 		,'date_maj' => $langs->trans('DateMaj')
@@ -102,11 +147,15 @@ echo $r->render($PDOdb, $sql, array(
 ));
 
 $parameters=array('sql'=>$sql);
+
 $reshook=$hookmanager->executeHooks('printFieldListFooter', $parameters, $object);    // Note that $action and $object may have been modified by hook
+
 print $hookmanager->resPrint;
 
 $formCore->end_form();
 
+
+echo '<a class="button"  href="' .  dol_buildpath('/minigolf/listScoreTrouParPartie.php',1) .'?action=create">' . $langs->trans("Saisir nouvelle partie") . '</a>';
 llxFooter('');
 
 /**

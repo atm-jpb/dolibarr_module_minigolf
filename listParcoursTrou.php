@@ -19,7 +19,7 @@ $action = GETPOST('action');
 if (empty($action) ) $action = $mode = 'view';
 
 
-$hookmanager->initHooks(array('mymodulelist'));
+$hookmanager->initHooks(array('minigolfHook'));
 
 
 
@@ -123,6 +123,7 @@ echo $r->render($PDOdb, $sql, array(
 ,'link' => array('name' => '<a href="cardParcoursTrou.php?id=@rowid@&action=edit">@val@</a>'
     , 'ordre' => '<input name="ordre" type="text" value="@val@"/>'
     , 'dellink' => '<a href="listParcoursTrou.php?rowid=@dellink@&action=delete">X</a>'
+    , 'dellink' => $langs->trans('dellink')
     )
 	,'type' => array(
 		'date_cre' => 'date' // [datetime], [hour], [money], [number], [integer]
@@ -174,8 +175,8 @@ $formCore->end_form();
 
 
 //ajouter un trou a un parcours
-// on affiche la liste des trous associer au parcours  $parcoursId
-//todo a remplacer un jour par appel obj abricot
+//on affiche la liste des trous associer au parcours  $parcoursId
+//todo a remplacer un jour par appel obj abricot (car ici ctrlV)
 global $db;
 $sql = "SELECT rowid, name, difficulty FROM ".MAIN_DB_PREFIX."minigolf_trou ;";
 
