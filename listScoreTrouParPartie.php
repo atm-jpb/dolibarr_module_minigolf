@@ -215,7 +215,7 @@ if (empty($reshook))
 
             $fk_parcours = GETPOST('fk_parcours');
 
-            var_dump($_REQUEST);exit;
+            //var_dump($_REQUEST);exit;
 
             //entrée : on récupere un listing de score pour chaque trou d'un parcours
 
@@ -233,13 +233,15 @@ if (empty($reshook))
             $sql = "INSERT INTO " .MAIN_DB_PREFIX. "minigolf_partie (rowid, parcoursId, userId)";
             $sql .= " VALUES ('$newIdPartie','$fk_parcours','$userId') ;" ;
 
+            $db->query($sql);
+            $sql="";
 
             //insertion score
 
             $sql .= "INSERT INTO " .MAIN_DB_PREFIX. "minigolf_score (rowid, fk_partie , fk_trou , score)";
-            $sql .= " VALUES ( ";
+            $sql .= " VALUES ";
             // pour chaque 'score' (identifié par l'id du trou) on insert fk_partie, fk_trou, score
-            $newIdScore = getNewRowIdFrom('minigolf_score');
+            $newIdScore = (int) getNewRowIdFrom('minigolf_score');
 
             //var_dump($_GET);exit;
             $i=0;
@@ -247,27 +249,21 @@ if (empty($reshook))
                 if ( empty( (int) $trouId) ) break;
                 if ($i>0) $sql .= ",";
                 //echo "score for trou $trouId : $score <br/>";
+
                 $sql .= "('$newIdScore','$newIdPartie','$trouId','$score')" ;
 
+                $newIdScore++;
                 $i++;
             }
-            $sql .= ') ;';
+            $sql .= ' ;';
 
-            // echo $sql;
+            //echo $sql;exit;
 
             $resql = $db->query($sql);
 
-            if ($resql == true) {
-                // insertion ok
-                setEventMessage("Ajout de la partie $newIdPartie réalisée");
 
-                header('Location: '.dol_buildpath('/minigolf/listPartie.php', 1) ) ;
-                exit;
-            }
-            else {
-                // faire vérifier le formulaire
-                setEventMessage("Erreur : veuillez vérifier l'intégrité des données du formulaire et réessayer");
-            }
+            header('Location: '.dol_buildpath('/minigolf/listPartie.php', 1) ) ;
+            exit;
 
             exit;
 

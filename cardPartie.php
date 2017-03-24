@@ -124,127 +124,62 @@ if (empty($reshook))
 $title=$langs->trans("minigolf");
 llxHeader('',$title);
 
-if ($action == 'create' && $mode == 'edit')
-{
-    load_fiche_titre($langs->trans("minigolf cardPartie"));
-    dol_fiche_head();
+//if ($action == 'create' && $mode == 'edit')
+//{
+//    load_fiche_titre($langs->trans("minigolf cardPartie"));
+//    dol_fiche_head();
+//}
+//else
+//{
+//    $head = minigolfAdminPrepareHead();
+//    $picto = 'generic';
+//    dol_fiche_head($head, 'card', $langs->trans("cardPartieTitle"), 0, $picto);
+//}
+
+//on veux afficher le résumé d'une partie
+
+// cad nom du parcour, nom du joueur et le score pour chacuns des trous associés.
+
+
+$myPartie = new TPartie();
+
+$myPartie->load($PDOdb, $id);
+
+$myParcoursId = $myPartie->parcoursId;
+
+$myUser = $myPartie->userId;
+
+
+echo "<br/> Partie n° $id";
+echo "<br/> Joueur : ". _getUserNameFromId($myUser);
+
+
+
+// on croise parcoursId avec les infos de parcoursTrou pour obtenir la liste des trous.
+
+//$myTrouList = new TParcoursTrou();
+
+$ficheScore = TFicheScore::getScoreForPartie($id); //$PDOdb,$myParcoursId
+
+//var_dump($ficheScore) ;exit;
+
+$html = "<table style='width: 20%; margin:20px;' name='FicheScore'>";
+foreach($ficheScore as $key => $trou){
+
+    //var_dump($trou);exit;
+
+    $html .= "<tr><td>" . _getTrouNameFromId($trou['fk_trou']) . '</td><td>' . $langs->trans('Score') . ' : ' . $trou['score'] . "</td></tr>" ;
 }
-else
-{
-    $head = minigolfAdminPrepareHead();
-    $picto = 'generic';
-    dol_fiche_head($head, 'card', $langs->trans("cardPartieTitle"), 0, $picto);
-}
 
-$formCore = new TFormCore;
-$formCore->Set_typeaff($mode);
-
-$form = new Form($PDOdb);
-
-$formconfirm = getFormConfirm($PDOdb, $form, $object, $action);
-if (!empty($formconfirm)) echo $formconfirm;
-
-
-if ($mode == 'edit') echo $formCore->begin_form($_SERVER['PHP_SELF'], 'form_minigolf_card');
-
-$linkback = '<a href="'.dol_buildpath('custom/minigolf/listPartie.php', 1).'">' . $langs->trans("BackToList") . '</a>';
-
-
-
-/*Formulaire perso*/
-
-
-
-if(empty($object->rowid)){
-
-    $rowid = null;
-    $parcoursId     = $langs->trans('Choissiez un parcours'); //TODO SELECT
-    $userId = $langs->trans('Choissiez un utilisateur');
-
-}
-
-else {
-
-    $rowid = $object->rowid;
-    $parcoursId     = $object->parcoursId;
-    $userId = $object->userId;
-
-}
-
-
-echo "<input type=hidden name='action' value='save' />";
-
-
-echo "<div name='newPartie' style='padding:20px;'>";
-
-echo "<table  >";
-
-//function texte($pLib,$pName,$pVal,$pTaille,$pTailleMax=0,$plus='',$class="text", $default='')
-/*
-echo "<tr><td style='width:150px;' >". $langs->trans('parcoursId') . "</td><td style='width:150px;' >";
-echo $formCore->texte('', 'parcoursId', $parcoursId, 22, 255, '');
-
-echo "<tr><td >". $langs->trans('userId') . "</td><td>";
-echo $formCore->texte('', 'userId', $userId, 22, 255, '');
-
-echo "<tr><td>";
-
-if ($mode == 'edit') echo $formCore->btsubmit( $langs->trans('Save'), 'bt_save' );
-
-echo "</td><td style='padding-top:20px;'>";
-
-echo '<a class="button"  href="' .  dol_buildpath('/minigolf/listPartie.php?',1) .'">' . $langs->trans("backToParcours") . '</a>';
-
-echo "</td>";
-*/
-
-//on veux afficher la liste des parcours disponible
-
-//ainsi que la liste des joueurs existant.
-
-//a la validation de ces 2 informations on va générer dynamiquement un formulaire
-
-global $db;
-$sql = "SELECT rowid, name, difficulty FROM ".MAIN_DB_PREFIX."minigolf_trou ;";
-
-$resql = $db->query($sql);
-
-$html ="<form name='addTrouToParcours' method='post' action=''>";
-$html.='<select name="fk_trou">';
-if ($resql)   {
-    $res = $db->num_rows($resql);
-    $i = 0;
-    if ($res) {
-        while ($i < $res) {
-            $obj = $db->fetch_object($resql);
-            if ($obj) {
-                $html .= '<option value="'.$obj->rowid.'">'.$obj->name .'</option>';
-            }
-            $i++;
-        }
-    }
-}
-$html .= "</select>";
-$html .= "<input type='hidden' name='action' value='save'/>";
-$html .= "<input type='hidden' name='fk_parcours' value='".$parcoursId."'/>";
-$html .= "<input type='hidden' name='ordre' value='999'/>";
-
-$html .= "<input type='submit' value='".$langs->trans('Ajouter un Trou')."'/>";
-$html .= "</form>";
-
+$html .= "</table>";
 echo $html;
 
+//$myUserId= $myPartie->userId;
+//
+//$user->fetch($myUserId);
+//
+//$myUsername = $user->getFullName($langs);
 
-
-
-echo "</table>";
-
-echo "</div>";
-
-
-
-if ($mode == 'edit') echo $formCore->end_form();
-
-//if ($mode == 'view' && $object->getId()) $somethingshown = $form->showLinkedObjectBlock($object->generic);
+echo '<br/> <a class="button"  href="' .  dol_buildpath('/minigolf/listPartie.php',1) .'">' . $langs->trans("backToParcours") . '</a>';
 
 llxFooter();

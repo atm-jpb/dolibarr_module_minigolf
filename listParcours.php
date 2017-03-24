@@ -42,6 +42,12 @@ if (empty($reshook))
 
             $object->save($PDOdb);
 
+            // suppression de l'association des tous a ce parcours
+
+            $cleanup = new TParcoursTrou();
+
+            $cleanup->removeAssocFor($rowid);
+
             header('Location: '.dol_buildpath('/minigolf/listParcours.php', 1) );
             exit;
 

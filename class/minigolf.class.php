@@ -45,6 +45,16 @@ class TParcoursTrou extends TObjetStd {
         $this->errors = array();
     }
 
+    public static function removeAssocFor($parcoursIdToDelete){
+        global $db;
+
+        $sql = "DELETE FROM " .MAIN_DB_PREFIX."minigolf_parcours_trou WHERE fk_parcours = $parcoursIdToDelete ;";
+
+        //echo($sql);exit;
+
+        return  $db->query($sql);
+
+    }
 
 }
 
@@ -69,6 +79,16 @@ class TPartie extends TObjetStd
         $this->errors = array();
     }
 
+    public static function removeAssocFor($partieToDelete){
+        global $db;
+
+        $sql = "DELETE FROM " .MAIN_DB_PREFIX."minigolf_score WHERE fk_partie = $partieToDelete ;";
+
+        //echo($sql);exit;
+
+        return  $db->query($sql);
+
+    }
 }
 
 
@@ -116,6 +136,60 @@ class TFicheScore extends TObjetStd
         $this->start();
 
         $this->errors = array();
+    }
+
+    public static function getScoreForPartie($partieId){
+
+        global $db;
+
+        $sql = "SELECT * FROM ".MAIN_DB_PREFIX."minigolf_score WHERE fk_partie = '$partieId';";
+
+        //echo($sql);exit;
+
+        $resql = $db->query($sql);
+
+        $res = $db->num_rows($resql);
+
+        //var_dump($res);exit;
+
+        $resultArray = array();
+
+        $i = 0;
+        if ($res) {
+            while ($i < $res) {
+                $obj = $db->fetch_object($resql);
+                if ($obj) {
+
+                    $resultArray[] = array(
+                        'rowid' => $obj->rowid
+                    ,'fk_trou' => $obj->fk_trou
+                    ,'score' => $obj->score
+                    );
+
+                    //    var_dump($obj);exit;
+
+                }
+
+                $i++;
+            }
+        }
+
+
+        //var_dump($resultArray);
+        //exit;
+
+        return $resultArray;
+    }
+
+    public static function removeAssocFor($PartieToDelete){
+        global $db;
+
+        $sql = "DELETE FROM " .MAIN_DB_PREFIX."minigolf_score WHERE fk_partie = $PartieToDelete ;";
+
+        //echo($sql);exit;
+
+        return  $db->query($sql);
+
     }
 
 }

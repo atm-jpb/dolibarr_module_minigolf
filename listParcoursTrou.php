@@ -22,7 +22,10 @@ if (empty($action) ) $action = $mode = 'view';
 $hookmanager->initHooks(array('minigolfHook'));
 
 
-
+//if ($action != "edit" ) {
+//    var_dump($_REQUEST);
+//    exit;
+//}
 
 
 /*
@@ -59,17 +62,28 @@ if (empty($reshook))
             // on doit mettre a jour le champ ordre de la table parcours_trou.
             // update de la ligne fesant figurer le fk_parcours et le fk_trou.
 
+            //var_dump($_POST);exit;
+
+
             $sql ="";
             //for each trou dans le post
             foreach ($_POST as $trouId => $ordre){
-                if ( empty( (int) $trouId) ) break;
-                $sql .= "UPDATE ".MAIN_DB_PREFIX."minigolf_parcours_trou SET ordre = $ordre WHERE fk_trou = '$trouId' and fk_parcours = '$parcoursId' ; ";
+                if ( empty( (int) $trouId) ) break; //moche, mais deadline
+                $sql .= "UPDATE ".MAIN_DB_PREFIX."minigolf_parcours_trou SET ordre = $ordre WHERE fk_trou = '$trouId' and fk_parcours = '$parcoursId' ;";
+                $resql = $db->query($sql);
+                $sql="";
             }
 
-            //echo $sql;exit;
 
 
-            $resql = $db->query($sql);
+
+
+            //echo $sql . "<br/>";
+            //var_dump($resql);
+            //exit;
+
+
+            // echo "$sql     result  : $resql"; exit;
 
             if ($resql == true) {
                 // insertion ok
@@ -81,6 +95,26 @@ if (empty($reshook))
                 setEventMessage("Erreur : veuillez vérifier l'intégrité des données du formulaire et réessayer");
 
             }
+
+            header('Location: '.dol_buildpath('/minigolf/listParcoursTrou.php', 1)."?action=edit&parcoursId=$parcoursId"  ); //.'?id= .$object->getId());
+            exit;
+
+
+            break;
+
+        case 'addTrou' :
+
+            //var_dump($_POST);exit;
+
+            $parcoursId = GETPOST('fk_parcours');
+
+            $object->ordre = 999;
+
+            $object->set_values($_GET); // Set standard attributes
+
+            //var_dump($object);exit;
+
+            $object->save($PDOdb, empty($object->ref)); // ref ?
 
             header('Location: '.dol_buildpath('/minigolf/listParcoursTrou.php', 1)."?action=edit&parcoursId=$parcoursId"  ); //.'?id= .$object->getId());
             exit;
@@ -196,12 +230,13 @@ print $hookmanager->resPrint;
 
 
 echo "<input type=hidden name='action' value='save' />";
-
+echo "<input type=hidden name='fk_parcours' value='".$parcoursId."' />";
 if ($action == 'edit') echo $formCore->btsubmit( $langs->trans('Save'), 'bt_save' );
 
 echo '<a class="button"  href="' .  dol_buildpath('/minigolf/listParcours.php?',1) .'">' . $langs->trans("backToParcours") . '</a>';
 
-$formCore->end_form();
+//$formCore->end_form(); // ne ferme pas le form ? pourquoi ?
+echo"</form><form>";
 
 
 //ajouter un trou a un parcours
@@ -228,11 +263,11 @@ if ($resql)   {
     }
 }
 $html .= "</select>";
-$html .= "<input type='hidden' name='action' value='save'/>";
+if ($action == 'edit') $html .= "<input type='hidden' name='action' value='addTrou'/>";
 $html .= "<input type='hidden' name='fk_parcours' value='".$parcoursId."'/>";
-$html .= "<input type='hidden' name='ordre' value='999'/>";
+// $html .= "<input type='hidden' name='ordre' value='999'/>";
 
-$html .= "<input type='submit' value='".$langs->trans('Ajouter un Trou')."'/>";
+if ($action == 'edit') $html .= "<input type='submit' value='".$langs->trans('Ajouter un Trou')."'/>";
 $html .= "</form>";
 
 echo $html;
