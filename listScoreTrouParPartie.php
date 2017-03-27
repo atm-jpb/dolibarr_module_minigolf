@@ -263,7 +263,6 @@ if (empty($reshook))
 
 
             header('Location: '.dol_buildpath('/minigolf/listPartie.php', 1) ) ;
-            exit;
 
             exit;
 

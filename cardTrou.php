@@ -124,18 +124,20 @@ if (empty($reshook))
 $title=$langs->trans("Gestion des trous");
 llxHeader('',$title);
 
-if ($action == 'create' && $mode == 'edit')
-{
-    load_fiche_titre($langs->trans("minigolf cardTrou"));
-    dol_fiche_head();
-}
-else
-{
-    $head = minigolfAdminPrepareHead();
-    $picto = 'generic';
-    dol_fiche_head($head, 'card', $langs->trans("cardTrouTitle"), 0, $picto);
-}
+//if ($action == 'create' && $mode == 'edit')
+//{
+//    load_fiche_titre($langs->trans("minigolf cardTrou"));
+//    dol_fiche_head();
+//}
+//else
+//{
+//    $head = minigolfAdminPrepareHead();
+//    $picto = 'generic';
+//    dol_fiche_head($head, 'card', $langs->trans("cardTrouTitle"), 0, $picto);
+//}
 
+
+dol_fiche_head();
 $formCore = new TFormCore;
 $formCore->Set_typeaff($mode);
 

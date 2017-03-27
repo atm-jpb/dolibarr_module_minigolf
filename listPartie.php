@@ -44,6 +44,12 @@ if (empty($reshook))
 
             $object->save($PDOdb);
 
+            // cleanup
+
+            $cleanup = new Tpartie();
+
+            $cleanup->removeAssocFor($rowid);
+
             header('Location: '.dol_buildpath('/minigolf/listPartie.php', 1) );
             exit;
 
